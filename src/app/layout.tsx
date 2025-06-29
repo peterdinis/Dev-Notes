@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { Ubuntu_Mono } from "next/font/google";
 import Navigation from "~/components/shared/Navigation";
 import { ScrollToTop } from "~/components/shared/ScrollToTop";
-import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
+import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
 	title: "Dev Notes",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const ubuntu = Ubuntu_Mono({
-	weight: "400"
+	weight: "400",
 });
 
 export default function RootLayout({
@@ -24,11 +24,12 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning className={`${ubuntu}`}>
 			<body>
 				<TRPCReactProvider>
-					<ThemeProvider 
+					<ThemeProvider
 						attribute="class"
 						defaultTheme="system"
 						enableSystem
-						disableTransitionOnChange>
+						disableTransitionOnChange
+					>
 						<Navigation />
 						<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 							{children}
