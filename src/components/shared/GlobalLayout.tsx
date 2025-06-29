@@ -1,9 +1,17 @@
+"use client"
 
-import { Outlet } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { FC, ReactNode } from "react";
+import { SidebarTrigger } from "../ui/sidebar";
 
-const AppLayout = () => {
+type GlobalLayoutProps = {
+    children?: ReactNode
+}
+
+const GlobalLayout: FC<GlobalLayoutProps> = ({
+    children
+}) => {
   const isMobile = useIsMobile();
 
   return (
@@ -19,11 +27,11 @@ const AppLayout = () => {
           </div>
         </header>
         <main className="flex-1 overflow-auto">
-          <Outlet />
+           {children}
         </main>
       </div>
     </div>
   );
 };
 
-export default AppLayout;
+export default GlobalLayout;

@@ -6,6 +6,7 @@ import Navigation from "~/components/shared/Navigation";
 import { ScrollToTop } from "~/components/shared/ScrollToTop";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
 import { TRPCReactProvider } from "~/trpc/react";
+import { SidebarProvider } from "~/components/ui/sidebar";
 
 export const metadata: Metadata = {
 	title: "Dev Notes",
@@ -30,11 +31,13 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						<Navigation />
-						<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-							{children}
-							<ScrollToTop />
-						</div>
+						<SidebarProvider>
+							<Navigation />
+							<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+								{children}
+								<ScrollToTop />
+							</div>
+						</SidebarProvider>
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>
