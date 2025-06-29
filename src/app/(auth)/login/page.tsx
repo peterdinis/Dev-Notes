@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
+import LoginForm from "~/components/auth/LoginForm";
 
 const LoginPage: NextPage = () => {
-    return (
-        <>Login Page</>
-    )
+    return <LoginForm />
 }
 
 export default LoginPage
