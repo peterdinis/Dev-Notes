@@ -1,6 +1,6 @@
-import type { NextPage } from "next"
-import FeaturesSection from "~/components/hero/FeaturesSection"
-import HeroWrapper from "~/components/hero/HeroWrapper"
+import type { NextPage } from "next";
+import FeaturesSection from "~/components/hero/FeaturesSection";
+import HeroWrapper from "~/components/hero/HeroWrapper";
 
 const Homepage: NextPage = () => {
 	return (
@@ -8,7 +8,7 @@ const Homepage: NextPage = () => {
 			<HeroWrapper />
 			<FeaturesSection />
 		</>
-	)
-}
+	);
+};
 
-export default Homepage
+export default Homepage;
