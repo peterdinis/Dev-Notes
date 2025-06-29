@@ -2,6 +2,7 @@ import { ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
 import type { FC } from "react";
 import { Button } from "../ui/button";
+import { ModeToggle } from "./ModeToggle";
 
 const Navigation: FC = () => {
 	return (
@@ -23,6 +24,7 @@ const Navigation: FC = () => {
 								<ArrowRight className="h-4 w-4" />
 							</Button>
 						</Link>
+						<ModeToggle />
 					</div>
 				</div>
 			</div>
