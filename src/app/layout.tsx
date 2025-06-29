@@ -21,10 +21,14 @@ export default function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" className={`${ubuntu}`}>
+		<html lang="en" suppressHydrationWarning className={`${ubuntu}`}>
 			<body>
 				<TRPCReactProvider>
-					<ThemeProvider>
+					<ThemeProvider 
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange>
 						<Navigation />
 						<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 							{children}
