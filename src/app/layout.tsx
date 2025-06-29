@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Navigation from "~/components/shared/Navigation";
+import { ScrollToTop } from "~/components/shared/ScrollToTop";
 
 export const metadata: Metadata = {
 	title: "Create T3 App",
@@ -27,6 +28,7 @@ export default function RootLayout({
 					<Navigation />
 					<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 						{children}
+						<ScrollToTop />
 					</div>
 				</TRPCReactProvider>
 			</body>
