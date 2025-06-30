@@ -6,7 +6,6 @@ import Navigation from "~/components/shared/Navigation";
 import { ScrollToTop } from "~/components/shared/ScrollToTop";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
 import { TRPCReactProvider } from "~/trpc/react";
-import { SidebarProvider } from "~/components/ui/sidebar";
 
 export const metadata: Metadata = {
 	title: "Dev Notes",

@@ -1,12 +1,15 @@
-"use client"
+"use client";
 
-import { Home, FileText, MessageSquare, Network, Folder, Settings, Users, Bell, Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Home, FileText, MessageSquare, Network, Folder,
+  Settings, Users, Bell, Calendar, Menu, X,
+} from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useIsMobile } from "~/hooks/use-mobile";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator, useSidebar } from "../ui/sidebar";
-import Link from "next/link";
 import type { FC } from "react";
-
 
 const navigationItems = [
   { title: "Dashboard", url: "/app", icon: Home },
@@ -21,74 +24,92 @@ const navigationItems = [
 ];
 
 const DashboardSidebar: FC = () => {
-  const { state } = useSidebar();
+  const pathname = usePathname();
   const isMobile = useIsMobile();
-  const isCollapsed = state === "collapsed";
+  const [isOpen, setIsOpen] = useState(!isMobile); // default: open on desktop
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false); // auto close on route change
+    }
+  }, [pathname]);
 
   const isActive = (path: string) => {
-    if (path === "/app") return location.pathname === "/app";
-    return location.pathname.startsWith(path);
-  };
-
-  const getNavClasses = (path: string) => {
-    const active = isActive(path);
-    return `transition-all duration-200 ${
-      active
-        ? "bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-r-2 border-emerald-500 shadow-sm"
-        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50"
-    }`;
+    return path === "/app"
+      ? pathname === "/app"
+      : pathname.startsWith(path);
   };
 
   return (
-    <Sidebar 
-      className={`border-r border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900 ${
-        isCollapsed ? "w-16" : isMobile ? "w-64" : "w-64"
-      } animate-slide-in-left`}
-      collapsible="offcanvas"
-    >
-      <SidebarContent>
-        <div className="p-4 animate-fade-in-up">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-blue-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
-              <Folder className="w-4 h-4 text-white" />
-            </div>
-            {!isCollapsed && (
-              <span className="font-bold text-slate-900 dark:text-slate-200 text-lg truncate">DevNotes</span>
-            )}
+    <>
+      <button
+        onClick={() => setIsOpen(prev => !prev)}
+        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-md shadow-md md:hidden"
+        aria-label="Toggle Sidebar"
+      >
+        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {isMobile && isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-30"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 transform bg-white/50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-64 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`}
+      >
+        {/* Logo / Brand */}
+        <div className="p-4 flex items-center gap-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+            <Folder className="w-4 h-4 text-white" />
           </div>
+          <span className="font-bold text-slate-900 dark:text-slate-200 text-lg">DevNotes</span>
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-slate-500 dark:text-slate-500 px-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            Navigation
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item, index) => (
-                <SidebarMenuItem key={item.title} className="animate-fade-in-up" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url} className={getNavClasses(item.url)}>
-                      <item.icon className="w-5 h-5 flex-shrink-0" />
-                      {!isCollapsed && (
-                        <div className="flex items-center justify-between w-full ml-3">
-                          <span className="truncate">{item.title}</span>
-                          {item.badge && (
-                            <Badge variant="secondary" className="ml-auto bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
-                              {item.badge}
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+        {/* Nav Items */}
+        <div className="mt-4">
+          <nav className="mt-2 space-y-1">
+            {navigationItems.map((item) => {
+              const active = isActive(item.url);
+              return (
+                <Link
+                  key={item.title}
+                  href={item.url}
+                  className={`flex items-center gap-3 px-4 py-2 mx-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    active
+                      ? "bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-r-2 border-emerald-500"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="flex-1 truncate">{item.title}</span>
+                  {item.badge && (
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
+                    >
+                      {item.badge}
+                    </Badge>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </aside>
+    </>
   );
-}
+};
 
-export default DashboardSidebar
+export default DashboardSidebar;
