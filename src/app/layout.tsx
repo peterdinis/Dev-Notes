@@ -5,6 +5,7 @@ import { Ubuntu_Mono } from "next/font/google";
 import Navigation from "~/components/shared/Navigation";
 import { ScrollToTop } from "~/components/shared/ScrollToTop";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
+import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
@@ -30,11 +31,12 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-							<Navigation />
-							<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-								{children}
-								<ScrollToTop />
-							</div>
+						<Navigation />
+						<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+							{children}
+							<ScrollToTop />
+						</div>
+						<Toaster />
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>

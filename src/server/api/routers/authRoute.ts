@@ -1,12 +1,11 @@
-
-import { z } from 'zod';
-import bcrypt from 'bcryptjs';
-import { db } from '~/server/db';
-import { users } from '~/server/db/schema';
-import { cookies } from 'next/headers';
-import { eq } from 'drizzle-orm';
-import { createTRPCRouter, publicProcedure } from '../trpc';
-import { lucia } from '~/lib/lucia';
+import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
+import { z } from "zod";
+import { lucia } from "~/lib/lucia";
+import { db } from "~/server/db";
+import { users } from "~/server/db/schema";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const registerSchema = z.object({
 	name: z.string().min(2),
@@ -20,7 +19,7 @@ const loginSchema = z.object({
 });
 
 export const authRouter = createTRPCRouter({
-    register: publicProcedure
+	register: publicProcedure
 		.input(registerSchema)
 		.mutation(async ({ input }) => {
 			const { name, email, password } = input;
@@ -28,7 +27,7 @@ export const authRouter = createTRPCRouter({
 			const existing = await db.query.users.findFirst({
 				where: eq(users.email, email),
 			});
-			if (existing) throw new Error('Email already in use.');
+			if (existing) throw new Error("Email already in use.");
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -44,28 +43,34 @@ export const authRouter = createTRPCRouter({
 			// Create session
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
-			(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			(await cookies()).set(
+				sessionCookie.name,
+				sessionCookie.value,
+				sessionCookie.attributes,
+			);
 
 			return { success: true };
 		}),
 
-	login: publicProcedure
-		.input(loginSchema)
-		.mutation(async ({ input }) => {
-			const { email, password } = input;
+	login: publicProcedure.input(loginSchema).mutation(async ({ input }) => {
+		const { email, password } = input;
 
-			const user = await db.query.users.findFirst({
-				where: eq(users.email, email),
-			});
-			if (!user) throw new Error('Invalid credentials');
+		const user = await db.query.users.findFirst({
+			where: eq(users.email, email),
+		});
+		if (!user) throw new Error("Invalid credentials");
 
-			const valid = bcrypt.compare(password, user?.password!);
-			if (!valid) throw new Error('Invalid credentials');
-            
-			const session = await lucia.createSession(user.id, {});
-			const sessionCookie = lucia.createSessionCookie(session.id);
-			(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+		const valid = bcrypt.compare(password, user?.password!);
+		if (!valid) throw new Error("Invalid credentials");
 
-			return { success: true };
-		}),
-})
+		const session = await lucia.createSession(user.id, {});
+		const sessionCookie = lucia.createSessionCookie(session.id);
+		(await cookies()).set(
+			sessionCookie.name,
+			sessionCookie.value,
+			sessionCookie.attributes,
+		);
+
+		return { success: true };
+	}),
+});
