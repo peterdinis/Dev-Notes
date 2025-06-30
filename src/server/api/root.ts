@@ -7,7 +7,7 @@ import { authRouter } from "./routers/authRoute";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-    auth: authRouter
+	auth: authRouter,
 });
 
 // export type definition of API
