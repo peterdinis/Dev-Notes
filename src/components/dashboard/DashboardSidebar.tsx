@@ -26,19 +26,17 @@ const navigationItems = [
 const DashboardSidebar: FC = () => {
   const pathname = usePathname();
   const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(!isMobile); // default: open on desktop
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isMobile) {
-      setIsOpen(false);
-    }
+    setIsOpen(!isMobile); // auto-open on desktop, close on mobile
   }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) {
-      setIsOpen(false); // auto close on route change
+      setIsOpen(false); // close sidebar on route change (mobile)
     }
-  }, [pathname]);
+  }, [pathname, isMobile]);
 
   const isActive = (path: string) => {
     return path === "/app"
@@ -48,14 +46,18 @@ const DashboardSidebar: FC = () => {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(prev => !prev)}
-        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-md shadow-md md:hidden"
-        aria-label="Toggle Sidebar"
-      >
-        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+      {/* Hamburger button (mobile only) */}
+      {isMobile && (
+        <button
+          onClick={() => setIsOpen(prev => !prev)}
+          className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-md shadow-md md:hidden"
+          aria-label="Toggle Sidebar"
+        >
+          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      )}
 
+      {/* Overlay when sidebar is open on mobile */}
       {isMobile && isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-30"
@@ -65,9 +67,8 @@ const DashboardSidebar: FC = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 transform bg-white/50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-64 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
+        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 transform bg-white/50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-64
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         {/* Logo / Brand */}
         <div className="p-4 flex items-center gap-2">
