@@ -31,13 +31,11 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						<SidebarProvider>
 							<Navigation />
 							<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 								{children}
 								<ScrollToTop />
 							</div>
-						</SidebarProvider>
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>
