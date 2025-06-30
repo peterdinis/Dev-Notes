@@ -4,11 +4,11 @@ import DashboardSidebar from "../dashboard/DashboardSidebar";
 import type { FC, ReactNode } from "react";
 import { useIsMobile } from "~/hooks/use-mobile";
 
-type GlobalLayoutProps = {
+type DashboardLayoutProps = {
     children?: ReactNode
 }
 
-const GlobalLayout: FC<GlobalLayoutProps> = ({
+const DashboardLayout: FC<DashboardLayoutProps> = ({
     children
 }) => {
   const isMobile = useIsMobile();
@@ -24,7 +24,7 @@ const GlobalLayout: FC<GlobalLayoutProps> = ({
             </h1>
           </div>
         </header>
-        <main className="flex-1 overflow-auto">
+        <main className="overflow-auto flex-1">
            {children}
         </main>
       </div>
@@ -32,4 +32,4 @@ const GlobalLayout: FC<GlobalLayoutProps> = ({
   );
 };
 
-export default GlobalLayout;
+export default DashboardLayout;

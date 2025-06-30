@@ -12,15 +12,15 @@ import { useIsMobile } from "~/hooks/use-mobile";
 import type { FC } from "react";
 
 const navigationItems = [
-  { title: "Dashboard", url: "/app", icon: Home },
-  { title: "Notes", url: "/app/notes", icon: FileText },
-  { title: "AI Assistant", url: "/app/ai-chat", icon: MessageSquare },
-  { title: "UML Diagrams", url: "/app/diagrams", icon: Network },
-  { title: "Whiteboard", url: "/app/whiteboard", icon: Folder },
-  { title: "Calendar", url: "/app/calendar", icon: Calendar },
-  { title: "Workspace", url: "/app/workspace", icon: Users },
-  { title: "Notifications", url: "/app/notifications", icon: Bell, badge: 3 },
-  { title: "Settings", url: "/app/settings", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Notes", url: "/notes", icon: FileText },
+  { title: "AI Assistant", url: "/ai-chat", icon: MessageSquare },
+  { title: "UML Diagrams", url: "/diagrams", icon: Network },
+  { title: "Whiteboard", url: "/whiteboard", icon: Folder },
+  { title: "Calendar", url: "/calendar", icon: Calendar },
+  { title: "Workspace", url: "/workspace", icon: Users },
+  { title: "Notifications", url: "/notifications", icon: Bell, badge: 3 },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 const DashboardSidebar: FC = () => {
