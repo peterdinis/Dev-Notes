@@ -24,7 +24,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
 						</h1>
 					</div>
 				</header>
-				<main className="flex-1 overflow-auto">{children}</main>
+				<main className="flex-1 overflow-y-auto">{children}</main>
 			</div>
 		</div>
 	);
