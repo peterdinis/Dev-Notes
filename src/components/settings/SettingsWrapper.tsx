@@ -36,7 +36,7 @@ const SettingsWrapper: FC = () => {
 				</p>
 			</div>
 
-			<div className="grid gap-6 md:grid-cols-2">
+			<div className="grid gap-6">
 				{/* Preferences */}
 				<Card className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
 					<CardHeader>
