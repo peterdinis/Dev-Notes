@@ -40,6 +40,7 @@ function Button({
   variant,
   size,
   asChild = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -47,12 +48,19 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button"
 
+  if (asChild && !React.isValidElement(children)) {
+    console.error("Button with `asChild` must have a single valid React element as its child.")
+    return null
+  }
+
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   )
 }
 
