@@ -8,7 +8,7 @@ import {
 	Users,
 	Zap,
 } from "lucide-react";
-import { createElement, type FC } from "react";
+import { type FC, createElement } from "react";
 import {
 	Card,
 	CardContent,

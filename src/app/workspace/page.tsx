@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import WorkspaceWrapper from "~/components/workspace/WorkspaceWrapper";
 
 const WorkspacePage: NextPage = () => {
-    return <WorkspaceWrapper />
-}
+	return <WorkspaceWrapper />;
+};
 
-export default WorkspacePage
+export default WorkspacePage;
