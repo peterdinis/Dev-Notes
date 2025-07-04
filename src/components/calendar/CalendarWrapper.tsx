@@ -39,6 +39,7 @@ import {
 	SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import DashboardLayout from "../dashboard/DashboardLayout";
 
 interface Event {
 	id: string;
@@ -141,7 +142,8 @@ const Calendar = () => {
 	const selectedDateEvents = selectedDate ? getEventsForDate(selectedDate) : [];
 
 	return (
-		<div className="container mx-auto animate-fade-in-up space-y-6 p-4 lg:p-6">
+		<DashboardLayout>
+            <div className="container mx-auto animate-fade-in-up space-y-6 p-4 lg:p-6">
 			<div className="mb-8">
 				<h1 className="mb-2 font-bold text-2xl text-slate-900 lg:text-3xl dark:text-slate-100">
 					Calendar
@@ -391,6 +393,7 @@ const Calendar = () => {
 				</div>
 			</div>
 		</div>
+        </DashboardLayout>
 	);
 };
 
