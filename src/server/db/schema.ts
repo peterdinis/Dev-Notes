@@ -15,7 +15,7 @@ export const users = createTable("users", (d) => ({
 		.notNull(),
 	updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
 }));
-
+ 
 export const sessions = createTable("sessions", (d) => ({
 	id: d.text().primaryKey(),
 	userId: d
