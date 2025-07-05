@@ -1,11 +1,11 @@
 import { useState, type FC } from "react";
 import { Plus, Search, Edit3, Save, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import TipTapEditor from "@/components/TipTapEditor";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useToast } from "~/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import TipTapEditor from "./editor/TipTapEditor";
 
 interface Note {
   id: string;
@@ -63,8 +63,8 @@ const NotesWrapper: FC = () => {
       content: "<h1>New Note</h1><p>Start writing your note here...</p>",
       workspace: selectedWorkspace === "all" ? "React Project" : selectedWorkspace,
       tags: [],
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0]
+      createdAt: new Date().toISOString().split('T')[0]!,
+      updatedAt: new Date().toISOString().split('T')[0]!
     };
 
     setNotes([newNote, ...notes]);
@@ -89,7 +89,7 @@ const NotesWrapper: FC = () => {
               ...note,
               title: editTitle,
               content: editContent,
-              updatedAt: new Date().toISOString().split('T')[0]
+              updatedAt: new Date().toISOString().split('T')[0]!
             }
           : note
       );
@@ -98,7 +98,7 @@ const NotesWrapper: FC = () => {
         ...selectedNote,
         title: editTitle,
         content: editContent,
-        updatedAt: new Date().toISOString().split('T')[0]
+        updatedAt: new Date().toISOString().split('T')[0]!
       });
       setIsEditing(false);
       
