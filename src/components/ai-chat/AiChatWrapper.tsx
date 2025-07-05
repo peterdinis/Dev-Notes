@@ -6,8 +6,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 import { ScrollArea } from "../ui/scroll-area";
-import { useToast } from "~/hooks/use-toast";
 import DashboardLayout from "../dashboard/DashboardLayout";
+import { useToast } from "~/hooks/shared/use-toast";
 
 interface Message {
   id: string;
