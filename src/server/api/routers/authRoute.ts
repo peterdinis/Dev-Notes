@@ -10,6 +10,7 @@ import {
 	publicProcedure,
 } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import type { User } from "lucia";
 
 const registerSchema = z.object({
 	name: z.string().min(2),
@@ -78,33 +79,31 @@ export const authRouter = createTRPCRouter({
 		return { success: true };
 	}),
 
-	me: publicProcedure.query(async ({ ctx }) => {
+	me: publicProcedure.query(async () => {
 		const cookieStore = cookies();
 		const sessionCookie = (await cookieStore).get(lucia.sessionCookieName);
-
 		const sessionId = sessionCookie?.value ?? null;
-		const { user } = sessionId
-			? await lucia.validateSession(sessionId)
-			: { user: null };
+		if (!sessionId) return { user: null };
 
+		try {
+			const { user } = await lucia.validateSession(sessionId);
+			return { user: { id: user!.id, name: user!.name, email: user!.email } };
+		} catch {
+			return { user: null };
+		}
 	}),
 
-	logout: publicProcedure.mutation(async ({ ctx }) => {
-		const sessionId = lucia.readSessionCookie(
-			(await cookies()).get(lucia.sessionCookieName)?.value ?? '',
-		);
+	logout: publicProcedure.mutation(async () => {
+		const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+		const sessionId = sessionCookie?.value ?? '';
 
 		if (sessionId) {
 			await lucia.invalidateSession(sessionId);
 		}
-
 		const emptySessionCookie = lucia.createBlankSessionCookie();
-
 		return {
-			status: 200,
-			headers: {
-				'Set-Cookie': emptySessionCookie.serialize(),
-			},
-		}
+			success: true,
+			emptySessionCookie: emptySessionCookie.serialize(),
+		};
 	}),
 });

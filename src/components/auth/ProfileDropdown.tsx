@@ -27,7 +27,7 @@ export function ProfileDropdown() {
   const user = meData.user;
   const initials = user.name
     .split(' ')
-    .map((n) => n[0])
+    .map((n: number[]) => n[0])
     .join('')
     .toUpperCase();
 
