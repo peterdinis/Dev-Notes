@@ -2,7 +2,6 @@
 
 import { Calendar, Clock, FileText, Folder, Plus } from "lucide-react";
 import { type FC, useState } from "react";
-import { useToast } from "~/hooks/use-toast";
 import { Button } from "../ui/button";
 import {
 	Card,
@@ -23,6 +22,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import DashboardLayout from "./DashboardLayout";
+import { useToast } from "~/hooks/shared/use-toast";
 
 interface Workspace {
 	id: string;
