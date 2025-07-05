@@ -73,7 +73,7 @@ const RegisterForm = () => {
 				id: loadingToast,
 			});
 
-			router.push("/dashboard");
+			router.push("/login");
 		} catch (error: any) {
 			toast.error(error?.message ?? "Registration failed", {
 				id: loadingToast,
