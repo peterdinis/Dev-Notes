@@ -31,7 +31,7 @@ const navigationItems = [
 	{ title: "Dashboard", url: "/dashboard", icon: Home },
 	{ title: "Notes", url: "/notes", icon: FileText },
 	{ title: "AI Assistant", url: "/ai-chat", icon: MessageSquare },
-	{ title: "UML Diagrams", url: "/diagrams", icon: Network },
+	{ title: "UML Diagrams", url: "/uml", icon: Network },
 	{ title: "Whiteboard", url: "/whiteboard", icon: Folder },
 	{ title: "Calendar", url: "/calendar", icon: Calendar },
 	{ title: "Workspace", url: "/workspace", icon: Users },

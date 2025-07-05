@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 import { ScrollArea } from "../ui/scroll-area";
 import { useToast } from "~/hooks/use-toast";
+import DashboardLayout from "../dashboard/DashboardLayout";
 
 interface Message {
   id: string;
@@ -100,7 +101,8 @@ const AiChatWrapper: FC = () => {
   ];
 
   return (
-    <div className="h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col">
+    <DashboardLayout>
+        <div className="h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col">
       <div className="p-6 border-b border-slate-700 bg-slate-900/30 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3">
@@ -225,6 +227,7 @@ const AiChatWrapper: FC = () => {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 };
 
