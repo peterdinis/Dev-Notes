@@ -112,7 +112,6 @@ export const notesRelations = relations(notes, ({ one }) => ({
 	}),
 }));
 
-// CHATS
 export const chatsRelations = relations(chats, ({ one, many }) => ({
 	user: one(users, {
 		fields: [chats.userId],
@@ -132,7 +131,6 @@ export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
 	}),
 }));
 
-// WORKSPACES
 export const workspacesRelations = relations(workspaces, ({ one, many }) => ({
 	owner: one(users, {
 		fields: [workspaces.ownerId],
@@ -145,7 +143,6 @@ export const workspacesRelations = relations(workspaces, ({ one, many }) => ({
 	events: many(events),
 }));
 
-// WORKSPACE MEMBERS
 export const workspaceMembersRelations = relations(workspaceMembers, ({ one }) => ({
 	workspace: one(workspaces, {
 		fields: [workspaceMembers.workspaceId],
@@ -157,7 +154,6 @@ export const workspaceMembersRelations = relations(workspaceMembers, ({ one }) =
 	}),
 }));
 
-// DIAGRAMS
 export const diagramsRelations = relations(diagrams, ({ one }) => ({
 	user: one(users, {
 		fields: [diagrams.userId],
@@ -169,7 +165,6 @@ export const diagramsRelations = relations(diagrams, ({ one }) => ({
 	}),
 }));
 
-// EVENTS
 export const eventsRelations = relations(events, ({ one }) => ({
 	user: one(users, {
 		fields: [events.userId],
