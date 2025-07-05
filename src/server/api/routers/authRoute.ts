@@ -9,8 +9,6 @@ import {
 	createTRPCRouter,
 	publicProcedure,
 } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import type { User } from "lucia";
 
 const registerSchema = z.object({
 	name: z.string().min(2),
