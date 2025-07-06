@@ -9,6 +9,7 @@ import {
 	publicProcedure,
 } from "../trpc";
 import { registerSchema, loginSchema } from "../schemas/authSchema";
+import { TRPCError } from "@trpc/server";
 
 export const authRouter = createTRPCRouter({
 	register: publicProcedure
@@ -70,13 +71,23 @@ export const authRouter = createTRPCRouter({
 		const cookieStore = cookies();
 		const sessionCookie = (await cookieStore).get(lucia.sessionCookieName);
 		const sessionId = sessionCookie?.value ?? null;
-		if (!sessionId) return { user: null };
+
+		if (!sessionId) {
+			throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
+		}
 
 		try {
 			const { user } = await lucia.validateSession(sessionId);
-			return { user: { id: user!.id, name: user!.name, email: user!.email } };
-		} catch {
-			return { user: null };
+			if (!user) {
+				throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid session" });
+			}
+
+			return {
+				id: user.id,
+				email: user.email,
+			};
+		} catch (err) {
+			throw new TRPCError({ code: "UNAUTHORIZED", message: "Session validation failed" });
 		}
 	}),
 
