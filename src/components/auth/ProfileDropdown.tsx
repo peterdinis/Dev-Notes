@@ -9,8 +9,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { api } from '~/trpc/react';
+import { useMemo, type FC } from 'react';
 
-export function ProfileDropdown() {
+const ProfileDropdown: FC = () => {
   const { data: meData } = api.auth.me.useQuery();
   const logoutMutation = api.auth.logout.useMutation();
 
@@ -24,12 +25,16 @@ export function ProfileDropdown() {
     return null;
   }
 
-  const user = meData.user;
-  const initials = user.name
+
+const user = meData.user;
+
+const initials = useMemo(() => {
+  return user.name
     .split(' ')
     .map((n: number[]) => n[0])
     .join('')
     .toUpperCase();
+}, [user.name]);
 
   return (
     <DropdownMenu>
@@ -61,3 +66,6 @@ export function ProfileDropdown() {
     </DropdownMenu>
   );
 }
+
+
+export default ProfileDropdown;
