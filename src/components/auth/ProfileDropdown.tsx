@@ -1,22 +1,22 @@
 "use client"
 
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import { useState} from 'react';
 import { api } from '~/trpc/react';
 
 export function ProfileDropdown() {
-  const { data: meData, refetch } = api.auth.me.useQuery();
+  const { data: meData } = api.auth.me.useQuery();
   const logoutMutation = api.auth.logout.useMutation();
 
-  const [loading, setLoading] = useState(false);
-
   const handleLogout = async () => {
-    setLoading(true);
     const res = await logoutMutation.mutateAsync();
     document.cookie = res.emptySessionCookie;
-    setLoading(false);
     window.location.href = '/login';
   };
 
@@ -32,23 +32,23 @@ export function ProfileDropdown() {
     .toUpperCase();
 
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="rounded-full p-1">
           <Avatar>
             <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
-      </DropdownMenu.Trigger>
+      </DropdownMenuTrigger>
 
-      <DropdownMenu.Content className="w-48 bg-white rounded-md shadow-md p-2" align="end" sideOffset={5}>
+      <DropdownMenuContent className="w-48 bg-white rounded-md shadow-md p-2" sideOffset={5} align="end">
         <div className="p-2 border-b mb-2">
           <p className="text-sm font-semibold">{user.name}</p>
           <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
 
-        <DropdownMenu.Item
+        <DropdownMenuItem
           className="cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
           onSelect={(e) => {
             e.preventDefault();
@@ -56,8 +56,8 @@ export function ProfileDropdown() {
           }}
         >
           Logout
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
