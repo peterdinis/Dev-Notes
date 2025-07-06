@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { lucia } from "~/lib/lucia";
 import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { users, sessions } from "~/server/db/schema";
 import { loginSchema, registerSchema } from "../schemas/authSchema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -84,13 +84,33 @@ export const authRouter = createTRPCRouter({
 		}
 
 		try {
-			const { user} = await lucia.validateSession(sessionId);
+			const session = await db.query.sessions.findFirst({
+				where: eq(sessions.id, sessionId),
+			});
 
-			console.log("U", user)
+			if (!session) {
+				throw new TRPCError({
+					code: "UNAUTHORIZED",
+					message: "Session not found",
+				});
+			}
+
+			const now = Math.floor(Date.now() / 1000);
+			if (session.expiresAt < now) {
+				throw new TRPCError({
+					code: "UNAUTHORIZED",
+					message: "Session expired",
+				});
+			}
+
+			const user = await db.query.users.findFirst({
+				where: eq(users.id, session.userId),
+			});
+
 			if (!user) {
 				throw new TRPCError({
 					code: "UNAUTHORIZED",
-					message: "Invalid session",
+					message: "User not found",
 				});
 			}
 
