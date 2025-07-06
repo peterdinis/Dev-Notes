@@ -48,6 +48,7 @@ export const authRouter = createTRPCRouter({
 		const user = await db.query.users.findFirst({
 			where: eq(users.email, email),
 		});
+		console.log("User found:", user);
 		if (!user) throw new Error("Invalid credentials");
 
 		const valid = await bcrypt.compare(password, user.password!);
@@ -55,6 +56,8 @@ export const authRouter = createTRPCRouter({
 
 		const session = await lucia.createSession(user.id, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
+
+		console.log("Session created:", session);
 		(await cookies()).set(
 			sessionCookie.name,
 			sessionCookie.value,
@@ -66,9 +69,13 @@ export const authRouter = createTRPCRouter({
 
 	me: publicProcedure.query(async () => {
 		const cookieStore = cookies();
+
 		const sessionCookie = (await cookieStore).get(lucia.sessionCookieName);
+
+		console.log("Session cookie:", sessionCookie);
 		const sessionId = sessionCookie?.value ?? null;
 
+		console.log("sessionID", sessionId)
 		if (!sessionId) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -77,7 +84,7 @@ export const authRouter = createTRPCRouter({
 		}
 
 		try {
-			const { user } = await lucia.validateSession(sessionId);
+			const { user} = await lucia.validateSession(sessionId);
 			if (!user) {
 				throw new TRPCError({
 					code: "UNAUTHORIZED",

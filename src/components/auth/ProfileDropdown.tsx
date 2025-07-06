@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { type FC} from "react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -14,11 +15,12 @@ import { api } from "~/trpc/react";
 const ProfileDropdown: FC = () => {
 	const { data: meData } = api.auth.me.useQuery();
 	const logoutMutation = api.auth.logout.useMutation();
+  const router = useRouter()
 
 	const handleLogout = async () => {
 		const res = await logoutMutation.mutateAsync();
 		document.cookie = res.emptySessionCookie;
-		window.location.href = "/login";
+		router.push("/login");
 	};
 
 	return (
@@ -41,7 +43,7 @@ const ProfileDropdown: FC = () => {
 				</div>
 
 				<DropdownMenuItem
-					className="cursor-pointer rounded px-2 py-1 hover:bg-gray-100"
+					className="cursor-pointer rounded px-2 py-1"
 					onSelect={(e) => {
 						e.preventDefault();
 						handleLogout();

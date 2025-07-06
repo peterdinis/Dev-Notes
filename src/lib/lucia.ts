@@ -5,10 +5,13 @@ import { sessions, users } from "~/server/db/schema";
 
 export const lucia = new Lucia(new DrizzleSQLiteAdapter(db, sessions, users), {
 	sessionCookie: {
-		attributes: {
-			secure: process.env.NODE_ENV === "production",
-		},
-	},
+      name: "auth_session",
+      attributes: {
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/"
+      }
+    },
 	getUserAttributes: (data) => {
 		return {
 			email: data.email,
