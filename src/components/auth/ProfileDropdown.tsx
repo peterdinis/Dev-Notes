@@ -1,7 +1,9 @@
+"use client"
+
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { api } from '~/trpc/react';
 
 export function ProfileDropdown() {
@@ -13,15 +15,13 @@ export function ProfileDropdown() {
   const handleLogout = async () => {
     setLoading(true);
     const res = await logoutMutation.mutateAsync();
-    // Nastavíme cookie na prázdnu (vymažeme session cookie)
     document.cookie = res.emptySessionCookie;
     setLoading(false);
-    // Prekonať reload alebo redirect, napr. na login
     window.location.href = '/login';
   };
 
   if (!meData || !meData.user) {
-    return null; // alebo nejaký login button
+    return null;
   }
 
   const user = meData.user;
