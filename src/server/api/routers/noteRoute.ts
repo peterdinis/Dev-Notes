@@ -1,123 +1,154 @@
 import { z } from "zod";
-import { eq, ilike, and } from "drizzle-orm";
+import { eq, ilike, and, sql } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { db } from "~/server/db";
 import { notes } from "~/server/db/schema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { lucia } from "~/lib/lucia";
 
 export const noteRouter = createTRPCRouter({
-  // Get all notes (with pagination & search)
-  list: publicProcedure
-    .input(
-      z.object({
-        workspaceId: z.string().optional(),
-        query: z.string().optional(),
-        limit: z.number().min(1).max(100).default(10),
-        offset: z.number().min(0).default(0),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const { limit, offset, query, workspaceId } = input;
+    list: publicProcedure
+        .input(
+            z.object({
+                workspaceId: z.string().optional(),
+                query: z.string().optional(),
+                limit: z.number().min(1).max(100).default(10),
+                offset: z.number().min(0).default(0),
+            })
+        )
+        .query(async ({ input }) => {
+            const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+            const sessionId = sessionCookie?.value ?? null;
+            if (!sessionId) throw new Error("Unauthorized");
 
-      const whereClause = and(
-        eq(notes.userId, ctx.session.user.id),
-        workspaceId ? eq(notes.workspaceId, workspaceId) : undefined,
-        query ? ilike(notes.title, `%${query}%`) : undefined
-      );
+            const { user } = await lucia.validateSession(sessionId);
+            if (!user) throw new Error("Unauthorized");
 
-      const [items, count] = await Promise.all([
-        db
-          .select()
-          .from(notes)
-          .where(whereClause)
-          .orderBy(notes.createdAt)
-          .limit(limit)
-          .offset(offset),
-        db
-          .select({ count: db.fn.count() })
-          .from(notes)
-          .where(whereClause)
-          .then(res => Number(res[0]?.count ?? 0)),
-      ]);
+            const { limit, offset, query, workspaceId } = input;
 
-      return {
-        items,
-        total: count,
-      };
-    }),
+            const whereClause = and(
+                eq(notes.userId, user.id),
+                workspaceId ? eq(notes.workspaceId, workspaceId) : undefined,
+                query ? ilike(notes.title, `%${query}%`) : undefined
+            );
 
-  // Get a single note
-  get: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
-      const note = await db.query.notes.findFirst({
-        where: and(
-          eq(notes.id, input.id),
-          eq(notes.userId, ctx.session.user.id)
-        ),
-      });
+            const [items, countResult] = await Promise.all([
+                db
+                    .select()
+                    .from(notes)
+                    .where(whereClause)
+                    .orderBy(notes.createdAt)
+                    .limit(limit)
+                    .offset(offset),
 
-      if (!note) throw new Error("Note not found");
-      return note;
-    }),
+                db
+                    .select({ count: sql<number>`COUNT(*)` })
+                    .from(notes)
+                    .where(whereClause),
+            ]);
 
-  // Create a new note
-  create: publicProcedure
-    .input(
-      z.object({
-        title: z.string().min(1),
-        content: z.string().optional(),
-        workspaceId: z.string().optional(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const newNote = {
-        id: crypto.randomUUID(),
-        userId: ctx.session.user.id,
-        title: input.title,
-        content: input.content ?? "",
-        workspaceId: input.workspaceId ?? null,
-        createdAt: Math.floor(Date.now() / 1000),
-        updatedAt: Math.floor(Date.now() / 1000),
-      };
+            const count = Number(countResult[0]?.count ?? 0);
 
-      await db.insert(notes).values(newNote);
-      return newNote;
-    }),
+            return {
+                items,
+                total: count,
+            };
+        }),
 
-  // Update a note
-  update: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        title: z.string().optional(),
-        content: z.string().optional(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const updated = await db
-        .update(notes)
-        .set({
-          ...(input.title && { title: input.title }),
-          ...(input.content && { content: input.content }),
-          updatedAt: Math.floor(Date.now() / 1000),
-        })
-        .where(and(eq(notes.id, input.id), eq(notes.userId, ctx.session.user.id)))
-        .returning();
+    get: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ input }) => {
+            const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+            const sessionId = sessionCookie?.value ?? null;
+            if (!sessionId) throw new Error("Unauthorized");
 
-      if (updated.length === 0) throw new Error("Note not found or unauthorized");
-      return updated[0];
-    }),
+            const { user } = await lucia.validateSession(sessionId);
+            if (!user) throw new Error("Unauthorized");
 
-  // Delete a note
-  delete: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const deleted = await db
-        .delete(notes)
-        .where(and(eq(notes.id, input.id), eq(notes.userId, ctx.session.user.id)))
-        .returning();
+            const note = await db.query.notes.findFirst({
+                where: and(
+                    eq(notes.id, input.id),
+                    eq(notes.userId, user.id)
+                ),
+            });
 
-      if (deleted.length === 0) throw new Error("Note not found or unauthorized");
-      return deleted[0];
-    }),
+            if (!note) throw new Error("Note not found");
+            return note;
+        }),
+
+    create: publicProcedure
+        .input(
+            z.object({
+                title: z.string().min(1),
+                content: z.string().optional(),
+                workspaceId: z.string().optional(),
+            })
+        )
+        .mutation(async ({ input }) => {
+            const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+            const sessionId = sessionCookie?.value ?? null;
+            if (!sessionId) throw new Error("Unauthorized");
+
+            const { user } = await lucia.validateSession(sessionId);
+            if (!user) throw new Error("Unauthorized");
+
+            const newNote = {
+                id: crypto.randomUUID(),
+                userId: user.id,
+                title: input.title,
+                content: input.content ?? "",
+                workspaceId: input.workspaceId ?? null,
+            };
+
+            await db.insert(notes).values(newNote);
+            return newNote;
+        }),
+
+    update: publicProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                title: z.string().optional(),
+                content: z.string().optional(),
+            })
+        )
+        .mutation(async ({ input }) => {
+            const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+            const sessionId = sessionCookie?.value ?? null;
+            if (!sessionId) throw new Error("Unauthorized");
+
+            const { user } = await lucia.validateSession(sessionId);
+            if (!user) throw new Error("Unauthorized");
+
+            const updated = await db
+                .update(notes)
+                .set({
+                    ...(input.title && { title: input.title }),
+                    ...(input.content && { content: input.content }),
+                })
+                .where(and(eq(notes.id, input.id), eq(notes.userId, user.id)))
+                .returning();
+
+            if (updated.length === 0) throw new Error("Note not found or unauthorized");
+            return updated[0];
+        }),
+
+    delete: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ input }) => {
+            const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
+            const sessionId = sessionCookie?.value ?? null;
+            if (!sessionId) throw new Error("Unauthorized");
+
+            const { user } = await lucia.validateSession(sessionId);
+            if (!user) throw new Error("Unauthorized");
+
+            const deleted = await db
+                .delete(notes)
+                .where(and(eq(notes.id, input.id), eq(notes.userId, user.id)))
+                .returning();
+
+            if (deleted.length === 0) throw new Error("Note not found or unauthorized");
+            return deleted[0];
+        }),
 });
