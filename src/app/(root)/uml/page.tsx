@@ -1,8 +1,8 @@
-import type { NextPage } from "next"
-import UmlWrapper from "~/components/uml/UmlWrapper"
+import type { NextPage } from "next";
+import UmlWrapper from "~/components/uml/UmlWrapper";
 
 const UMLPage: NextPage = () => {
-    return <UmlWrapper />
-}
+	return <UmlWrapper />;
+};
 
-export default UMLPage
+export default UMLPage;

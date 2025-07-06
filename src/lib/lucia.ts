@@ -5,12 +5,16 @@ import { sessions, users } from "~/server/db/schema";
 
 export const lucia = new Lucia(new DrizzleSQLiteAdapter(db, sessions, users), {
 	sessionCookie: {
+		name: "auth_session",
 		attributes: {
 			secure: process.env.NODE_ENV === "production",
+			sameSite: "lax",
+			path: "/",
 		},
 	},
 	getUserAttributes: (data) => {
 		return {
+			id: data.id,
 			email: data.email,
 		};
 	},
@@ -21,6 +25,7 @@ declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
 		DatabaseUserAttributes: {
+			id: string;
 			email: string;
 		};
 	}
