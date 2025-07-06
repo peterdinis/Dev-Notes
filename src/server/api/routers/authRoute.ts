@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { z } from "zod";
 import { lucia } from "~/lib/lucia";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
@@ -9,17 +8,7 @@ import {
 	createTRPCRouter,
 	publicProcedure,
 } from "../trpc";
-
-const registerSchema = z.object({
-	name: z.string().min(2),
-	email: z.string().email(),
-	password: z.string().min(6),
-});
-
-const loginSchema = z.object({
-	email: z.string().email(),
-	password: z.string(),
-});
+import { registerSchema, loginSchema } from "../schemas/authSchema";
 
 export const authRouter = createTRPCRouter({
 	register: publicProcedure
