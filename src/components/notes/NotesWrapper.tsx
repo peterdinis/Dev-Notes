@@ -2,10 +2,10 @@ import { useState, type FC } from "react";
 import { Plus, Search, Edit3, Save, FileText } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useToast } from "~/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import TipTapEditor from "./editor/TipTapEditor";
+import { useToast } from "~/hooks/shared/use-toast";
 
 interface Note {
   id: string;
