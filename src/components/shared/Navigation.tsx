@@ -1,10 +1,17 @@
 import { ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
-import type { FC } from "react";
+import { useMemo, type FC } from "react";
 import { Button } from "../ui/button";
 import { ModeToggle } from "./ModeToggle";
+import { api } from "~/trpc/react";
+import ProfileDropdown from "../auth/ProfileDropdown";
 
 const Navigation: FC = () => {
+	const { data: meData } = api.auth.me.useQuery();
+
+	const user = useMemo(() => {
+		return meData!.user;
+	}, [meData])
 	return (
 		<nav className="fixed top-0 z-50 w-full border-slate-200 border-b bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,12 +25,16 @@ const Navigation: FC = () => {
 						</span>
 					</div>
 					<div className="flex items-center gap-3 sm:gap-4">
-						<Link href="/app">
-							<Button className="gap-2 bg-emerald-600 text-sm hover:bg-emerald-700 sm:text-base">
-								Get Started
-								<ArrowRight className="h-4 w-4" />
-							</Button>
-						</Link>
+						{!user ? (
+							<Link href="/login">
+								<Button className="gap-2 bg-emerald-600 text-sm hover:bg-emerald-700 sm:text-base">
+									Get Started
+									<ArrowRight className="h-4 w-4" />
+								</Button>
+							</Link>
+						) : (
+							<ProfileDropdown />
+						)}
 						<ModeToggle />
 					</div>
 				</div>
