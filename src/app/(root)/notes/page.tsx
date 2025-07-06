@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import NotesWrapper from "~/components/notes/NotesWrapper";
 
 const NotesPage: NextPage = () => {
-    return <NotesWrapper />
-}
+	return <NotesWrapper />;
+};
 
-export default NotesPage
+export default NotesPage;

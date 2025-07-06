@@ -1,15 +1,12 @@
+import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { lucia } from "~/lib/lucia";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import {
-	createTRPCRouter,
-	publicProcedure,
-} from "../trpc";
-import { registerSchema, loginSchema } from "../schemas/authSchema";
-import { TRPCError } from "@trpc/server";
+import { loginSchema, registerSchema } from "../schemas/authSchema";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
 	register: publicProcedure
@@ -39,7 +36,7 @@ export const authRouter = createTRPCRouter({
 			(await cookies()).set(
 				sessionCookie.name,
 				sessionCookie.value,
-				sessionCookie.attributes
+				sessionCookie.attributes,
 			);
 
 			return { success: true };
@@ -61,7 +58,7 @@ export const authRouter = createTRPCRouter({
 		(await cookies()).set(
 			sessionCookie.name,
 			sessionCookie.value,
-			sessionCookie.attributes
+			sessionCookie.attributes,
 		);
 
 		return { success: true };
@@ -73,13 +70,19 @@ export const authRouter = createTRPCRouter({
 		const sessionId = sessionCookie?.value ?? null;
 
 		if (!sessionId) {
-			throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "Not authenticated",
+			});
 		}
 
 		try {
 			const { user } = await lucia.validateSession(sessionId);
 			if (!user) {
-				throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid session" });
+				throw new TRPCError({
+					code: "UNAUTHORIZED",
+					message: "Invalid session",
+				});
 			}
 
 			return {
@@ -87,13 +90,16 @@ export const authRouter = createTRPCRouter({
 				email: user.email,
 			};
 		} catch (err) {
-			throw new TRPCError({ code: "UNAUTHORIZED", message: "Session validation failed" });
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "Session validation failed",
+			});
 		}
 	}),
 
 	logout: publicProcedure.mutation(async () => {
 		const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-		const sessionId = sessionCookie?.value ?? '';
+		const sessionId = sessionCookie?.value ?? "";
 
 		if (sessionId) {
 			await lucia.invalidateSession(sessionId);

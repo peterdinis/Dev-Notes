@@ -1,9 +1,9 @@
 "use client";
 
 import type { FC, ReactNode } from "react";
+import { useIsMobile } from "~/hooks/shared/use-mobile";
 import DashboardSidebar from "../dashboard/DashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
-import { useIsMobile } from "~/hooks/shared/use-mobile";
 
 type DashboardLayoutProps = {
 	children?: ReactNode;
