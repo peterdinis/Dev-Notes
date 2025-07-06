@@ -85,6 +85,8 @@ export const authRouter = createTRPCRouter({
 
 		try {
 			const { user} = await lucia.validateSession(sessionId);
+
+			console.log("U", user)
 			if (!user) {
 				throw new TRPCError({
 					code: "UNAUTHORIZED",
