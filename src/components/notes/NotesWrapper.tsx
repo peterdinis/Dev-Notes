@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, type FC } from "react";
 import { Plus, Search, Edit3, Save, FileText } from "lucide-react";
 import { Button } from "../ui/button";
@@ -6,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import TipTapEditor from "./editor/TipTapEditor";
 import { useToast } from "~/hooks/shared/use-toast";
+import DashboardLayout from "../dashboard/DashboardLayout";
 
 interface Note {
   id: string;
@@ -110,7 +113,8 @@ const NotesWrapper: FC = () => {
   };
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <DashboardLayout>
+      <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="flex h-full">
         {/* Sidebar */}
         <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 backdrop-blur-sm animate-slide-in-left">
@@ -255,6 +259,7 @@ const NotesWrapper: FC = () => {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 };
 

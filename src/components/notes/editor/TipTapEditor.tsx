@@ -154,7 +154,6 @@ const TipTapEditor = ({ content, onChange, placeholder = "Start writing..." }: T
         
         <Separator orientation="vertical" className="h-6 mx-1" />
         
-        {/* Headings */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           isActive={editor.isActive('heading', { level: 1 })}
@@ -184,8 +183,7 @@ const TipTapEditor = ({ content, onChange, placeholder = "Start writing..." }: T
         </ToolbarButton>
         
         <Separator orientation="vertical" className="h-6 mx-1" />
-        
-        {/* Text Alignment */}
+
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           isActive={editor.isActive({ textAlign: 'left' })}
@@ -209,7 +207,6 @@ const TipTapEditor = ({ content, onChange, placeholder = "Start writing..." }: T
         
         <Separator orientation="vertical" className="h-6 mx-1" />
         
-        {/* Lists and Blocks */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           isActive={editor.isActive('bulletList')}
@@ -239,8 +236,7 @@ const TipTapEditor = ({ content, onChange, placeholder = "Start writing..." }: T
         </ToolbarButton>
         
         <Separator orientation="vertical" className="h-6 mx-1" />
-        
-        {/* History */}
+
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
