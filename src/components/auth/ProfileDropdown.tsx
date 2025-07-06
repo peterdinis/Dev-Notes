@@ -1,7 +1,7 @@
 "use client";
 
-import { type FC, useMemo } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { type FC} from "react";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -21,41 +21,23 @@ const ProfileDropdown: FC = () => {
 		window.location.href = "/login";
 	};
 
-	if (!meData || !meData.user) {
-		return null;
-	}
-
-	const user = meData.user;
-
-	const initials = useMemo(() => {
-		return user.name
-			.split(" ")
-			.map((n: number[]) => n[0])
-			.join("")
-			.toUpperCase();
-	}, [user.name]);
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="rounded-full p-1">
 					<Avatar>
-						<AvatarImage
-							src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
-						/>
-						<AvatarFallback>{initials}</AvatarFallback>
+						<AvatarFallback>{meData?.email}</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
-				className="w-48 rounded-md bg-white p-2 shadow-md"
+				className="w-48 rounded-md bg-white dark:bg-background p-2 shadow-md"
 				sideOffset={5}
 				align="end"
 			>
 				<div className="mb-2 border-b p-2">
-					<p className="font-semibold text-sm">{user.name}</p>
-					<p className="text-muted-foreground text-xs">{user.email}</p>
+					<p className="text-muted-foreground text-xs">{meData?.email!}</p>
 				</div>
 
 				<DropdownMenuItem
