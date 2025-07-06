@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { FC } from "react";
+import { useIsMobile } from "~/hooks/shared/use-mobile";
 import { Badge } from "../ui/badge";
 import {
 	Sidebar,
@@ -25,7 +26,6 @@ import {
 	SidebarSeparator,
 	useSidebar,
 } from "../ui/sidebar";
-import { useIsMobile } from "~/hooks/shared/use-mobile";
 
 const navigationItems = [
 	{ title: "Dashboard", url: "/dashboard", icon: Home },
