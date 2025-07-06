@@ -17,6 +17,8 @@ const ProfileDropdown: FC = () => {
 	const logoutMutation = api.auth.logout.useMutation();
   const router = useRouter()
 
+  console.log("MeData", meData);
+
 	const handleLogout = async () => {
 		const res = await logoutMutation.mutateAsync();
 		document.cookie = res.emptySessionCookie;

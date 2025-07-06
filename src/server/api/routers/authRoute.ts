@@ -88,6 +88,8 @@ export const authRouter = createTRPCRouter({
 				where: eq(sessions.id, sessionId),
 			});
 
+			console.log("Session found:", session);
+
 			if (!session) {
 				throw new TRPCError({
 					code: "UNAUTHORIZED",
@@ -117,6 +119,7 @@ export const authRouter = createTRPCRouter({
 			return {
 				id: user.id,
 				email: user.email,
+				name: user.name,
 			};
 		} catch (err) {
 			throw new TRPCError({
