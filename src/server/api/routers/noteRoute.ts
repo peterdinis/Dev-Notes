@@ -9,7 +9,7 @@ import { workspaceIdSchema, paginationSchema, noteIdSchema, titleSchema, content
 
 export const noteRouter = createTRPCRouter({
   list: publicProcedure
-    .input(
+    .input( 
       z
         .object({
           query: z.string().max(100).optional(),
