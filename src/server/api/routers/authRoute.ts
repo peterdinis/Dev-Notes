@@ -29,8 +29,7 @@ export const authRouter = createTRPCRouter({
 				email,
 				password: hashedPassword,
 			});
-
-			// Create session
+			
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			(await cookies()).set(
