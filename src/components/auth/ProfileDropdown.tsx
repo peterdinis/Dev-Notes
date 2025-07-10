@@ -3,7 +3,7 @@
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import type { FC } from "react";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -21,6 +21,7 @@ const ProfileDropdown: FC = () => {
 				<Button variant="ghost" className="rounded-full p-1">
 					<Avatar>
 						<AvatarFallback>{user?.email}</AvatarFallback>
+						<AvatarImage src={user?.picture!} />
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
