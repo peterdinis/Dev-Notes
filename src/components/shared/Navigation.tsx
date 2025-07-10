@@ -1,15 +1,6 @@
-<<<<<<< HEAD
-import { FileText } from "lucide-react";
-import { type FC } from "react";
-import { ModeToggle } from "./ModeToggle";
-=======
 import { ArrowRight, FileText } from "lucide-react";
-import Link from "next/link";
-import { type FC, useMemo } from "react";
-import { api } from "~/trpc/react";
->>>>>>> main
+import { type FC} from "react";
 import ProfileDropdown from "../auth/ProfileDropdown";
-import { Button } from "../ui/button";
 import { ModeToggle } from "./ModeToggle";
 
 const Navigation: FC = () => {
