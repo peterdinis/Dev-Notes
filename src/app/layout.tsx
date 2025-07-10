@@ -6,6 +6,7 @@ import { ScrollToTop } from "~/components/shared/ScrollToTop";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
 import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
+import { AuthProvider } from "~/components/shared/providers/AuthProvider";
 
 export const metadata: Metadata = {
 	title: "Dev Notes",
@@ -30,12 +31,14 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						<Navigation />
-						<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-							{children}
-							<ScrollToTop />
-						</div>
-						<Toaster />
+						<AuthProvider>
+							<Navigation />
+							<div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+								{children}
+								<ScrollToTop />
+							</div>
+							<Toaster />
+						</AuthProvider>
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>
