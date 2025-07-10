@@ -1,36 +1,38 @@
+import { and, eq, ilike, sql } from "drizzle-orm";
 import { z } from "zod";
-import { eq, ilike, and, sql } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { db } from "~/server/db";
 import { notes } from "~/server/db/schema";
+import {
+  contentSchema,
+  noteIdSchema,
+  paginationSchema,
+  titleSchema,
+  workspaceIdSchema,
+} from "../schemas/notesSchema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { lucia } from "~/lib/lucia";
-import { workspaceIdSchema, paginationSchema, noteIdSchema, titleSchema, contentSchema } from "../schemas/notesSchema";
 
 export const noteRouter = createTRPCRouter({
   list: publicProcedure
-    .input( 
+    .input(
       z
         .object({
           query: z.string().max(100).optional(),
           workspaceId: workspaceIdSchema,
         })
-        .merge(paginationSchema)
+        .merge(paginationSchema),
     )
     .query(async ({ input }) => {
-      const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-      const sessionId = sessionCookie?.value ?? null;
-      if (!sessionId) throw new Error("Unauthorized");
-
-      const { user } = await lucia.validateSession(sessionId);
-      if (!user) throw new Error("Unauthorized");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new Error("Unauthorized");
 
       const { limit, offset, query, workspaceId } = input;
 
       const whereClause = and(
         eq(notes.userId, user.id),
         workspaceId ? eq(notes.workspaceId, workspaceId) : undefined,
-        query ? ilike(notes.title, `%${query}%`) : undefined
+        query ? ilike(notes.title, `%${query}%`) : undefined,
       );
 
       const [items, countResult] = await Promise.all([
@@ -59,12 +61,9 @@ export const noteRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: noteIdSchema }))
     .query(async ({ input }) => {
-      const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-      const sessionId = sessionCookie?.value ?? null;
-      if (!sessionId) throw new Error("Unauthorized");
-
-      const { user } = await lucia.validateSession(sessionId);
-      if (!user) throw new Error("Unauthorized");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new Error("Unauthorized");
 
       const note = await db.query.notes.findFirst({
         where: and(eq(notes.id, input.id), eq(notes.userId, user.id)),
@@ -80,15 +79,12 @@ export const noteRouter = createTRPCRouter({
         title: titleSchema,
         content: contentSchema,
         workspaceId: workspaceIdSchema,
-      })
+      }),
     )
     .mutation(async ({ input }) => {
-      const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-      const sessionId = sessionCookie?.value ?? null;
-      if (!sessionId) throw new Error("Unauthorized");
-
-      const { user } = await lucia.validateSession(sessionId);
-      if (!user) throw new Error("Unauthorized");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new Error("Unauthorized");
 
       const newNote = {
         id: crypto.randomUUID(),
@@ -108,15 +104,12 @@ export const noteRouter = createTRPCRouter({
         id: noteIdSchema,
         title: titleSchema.optional(),
         content: contentSchema,
-      })
+      }),
     )
     .mutation(async ({ input }) => {
-      const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-      const sessionId = sessionCookie?.value ?? null;
-      if (!sessionId) throw new Error("Unauthorized");
-
-      const { user } = await lucia.validateSession(sessionId);
-      if (!user) throw new Error("Unauthorized");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new Error("Unauthorized");
 
       const updated = await db
         .update(notes)
@@ -127,26 +120,25 @@ export const noteRouter = createTRPCRouter({
         .where(and(eq(notes.id, input.id), eq(notes.userId, user.id)))
         .returning();
 
-      if (updated.length === 0) throw new Error("Note not found or unauthorized");
+      if (updated.length === 0)
+        throw new Error("Note not found or unauthorized");
       return updated[0];
     }),
 
   delete: publicProcedure
     .input(z.object({ id: noteIdSchema }))
     .mutation(async ({ input }) => {
-      const sessionCookie = (await cookies()).get(lucia.sessionCookieName);
-      const sessionId = sessionCookie?.value ?? null;
-      if (!sessionId) throw new Error("Unauthorized");
-
-      const { user } = await lucia.validateSession(sessionId);
-      if (!user) throw new Error("Unauthorized");
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new Error("Unauthorized");
 
       const deleted = await db
         .delete(notes)
         .where(and(eq(notes.id, input.id), eq(notes.userId, user.id)))
         .returning();
 
-      if (deleted.length === 0) throw new Error("Note not found or unauthorized");
+      if (deleted.length === 0)
+        throw new Error("Note not found or unauthorized");
       return deleted[0];
     }),
 });

@@ -55,6 +55,22 @@ CREATE TABLE `dev-notes_notes` (
 	FOREIGN KEY (`workspaceId`) REFERENCES `dev-notes_workspaces`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE TABLE `dev-notes_sessions` (
+	`id` text PRIMARY KEY NOT NULL,
+	`userId` text NOT NULL,
+	`expiresAt` integer NOT NULL,
+	FOREIGN KEY (`userId`) REFERENCES `dev-notes_users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `dev-notes_users` (
+	`id` text PRIMARY KEY NOT NULL,
+	`first_name` text,
+	`last_name` text,
+	`email` text,
+	`createdAt` integer DEFAULT (unixepoch()) NOT NULL,
+	`updatedAt` integer
+);
+--> statement-breakpoint
 CREATE TABLE `dev-notes_workspace_members` (
 	`id` text PRIMARY KEY NOT NULL,
 	`workspaceId` text NOT NULL,
