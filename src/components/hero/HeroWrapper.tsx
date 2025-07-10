@@ -30,7 +30,7 @@ const HeroWrapper: FC = () => {
 							communication - all in one powerful platform.
 						</p>
 						<div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-							<Link href="/app">
+							<Link href="/account/create">
 								<Button
 									size="lg"
 									className="w-full gap-2 bg-emerald-600 px-6 text-base hover:bg-emerald-700 sm:w-auto sm:px-8 sm:text-lg"
@@ -39,13 +39,6 @@ const HeroWrapper: FC = () => {
 									<ArrowRight className="h-5 w-5" />
 								</Button>
 							</Link>
-							<Button
-								variant="outline"
-								size="lg"
-								className="w-full px-6 text-base sm:w-auto sm:px-8 sm:text-lg"
-							>
-								Watch Demo
-							</Button>
 						</div>
 					</div>
 				</div>
