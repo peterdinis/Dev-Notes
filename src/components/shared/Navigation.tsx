@@ -1,4 +1,4 @@
-import { ArrowRight, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { type FC} from "react";
 import ProfileDropdown from "../auth/ProfileDropdown";
 import { ModeToggle } from "./ModeToggle";

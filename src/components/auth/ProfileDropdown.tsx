@@ -9,15 +9,21 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
+import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
 
 const ProfileDropdown: FC = () => {
+
+	const {user} = useKindeBrowserClient();
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="rounded-full p-1">
 					<Avatar>
-						<AvatarFallback>iiiii</AvatarFallback>
+						<AvatarFallback>
+							{user?.email}
+						</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
@@ -28,16 +34,13 @@ const ProfileDropdown: FC = () => {
 				align="end"
 			>
 				<div className="mb-2 border-b p-2">
-					<p className="text-muted-foreground text-xs">iiiiiii</p>
+					<p className="text-muted-foreground text-xs">{user?.email}</p>
 				</div>
 
 				<DropdownMenuItem
 					className="cursor-pointer rounded px-2 py-1"
-					onSelect={(e) => {
-						e.preventDefault();
-					}}
 				>
-					Logout
+					<LogoutLink href="/login">Logout</LogoutLink>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
