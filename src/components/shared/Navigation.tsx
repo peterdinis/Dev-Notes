@@ -1,18 +1,13 @@
-<<<<<<< HEAD
+"use client";
+
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { FileText } from "lucide-react";
-import { type FC } from "react";
-import { ModeToggle } from "./ModeToggle";
-=======
-import { ArrowRight, FileText } from "lucide-react";
-import Link from "next/link";
-import { type FC, useMemo } from "react";
-import { api } from "~/trpc/react";
->>>>>>> main
+import type { FC } from "react";
 import ProfileDropdown from "../auth/ProfileDropdown";
-import { Button } from "../ui/button";
 import { ModeToggle } from "./ModeToggle";
 
 const Navigation: FC = () => {
+	const { user } = useKindeBrowserClient();
 	return (
 		<nav className="fixed top-0 z-50 w-full border-slate-200 border-b bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +21,7 @@ const Navigation: FC = () => {
 						</span>
 					</div>
 					<div className="flex items-center gap-3 sm:gap-4">
-						<ProfileDropdown />
+						{user && <ProfileDropdown />}
 						<ModeToggle />
 					</div>
 				</div>

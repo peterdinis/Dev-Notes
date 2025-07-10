@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { type FC} from "react";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import type { FC } from "react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -10,48 +11,31 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { api } from "~/trpc/react";
 
 const ProfileDropdown: FC = () => {
-	const { data: meData } = api.auth.me.useQuery();
-	const logoutMutation = api.auth.logout.useMutation();
-  const router = useRouter()
-
-  console.log("MeData", meData);
-
-	const handleLogout = async () => {
-		const res = await logoutMutation.mutateAsync();
-		document.cookie = res.emptySessionCookie;
-		router.push("/login");
-	};
+	const { user } = useKindeBrowserClient();
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="rounded-full p-1">
 					<Avatar>
-						<AvatarFallback>{meData?.email}</AvatarFallback>
+						<AvatarFallback>{user?.email}</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
-				className="w-48 rounded-md bg-white dark:bg-background p-2 shadow-md"
+				className="w-48 rounded-md bg-white p-2 shadow-md dark:bg-background"
 				sideOffset={5}
 				align="end"
 			>
 				<div className="mb-2 border-b p-2">
-					<p className="text-muted-foreground text-xs">{meData?.email!}</p>
+					<p className="text-muted-foreground text-xs">{user?.email}</p>
 				</div>
 
-				<DropdownMenuItem
-					className="cursor-pointer rounded px-2 py-1"
-					onSelect={(e) => {
-						e.preventDefault();
-						handleLogout();
-					}}
-				>
-					Logout
+				<DropdownMenuItem className="cursor-pointer rounded px-2 py-1">
+					<LogoutLink href="/login">Logout</LogoutLink>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

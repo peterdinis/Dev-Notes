@@ -1,14 +1,14 @@
 import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm";
-import { sqliteTableCreator } from "drizzle-orm/sqlite-core";
+import { sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
 
 export const createTable = sqliteTableCreator((name) => `dev-notes_${name}`);
 
 export const users = createTable("users", (d) => ({
-	id: d.text().primaryKey(),
-	name: d.text({ length: 256 }),
-	email: d.text({ length: 256 }).unique(),
-	password: d.text({ length: 256 }),
+	id: text("id").primaryKey(),
+	firstName: text("first_name"),
+	lastName: text("last_name"),
+	email: text("email"),
 	createdAt: d
 		.integer({ mode: "timestamp" })
 		.default(sql`(unixepoch())`)

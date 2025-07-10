@@ -1,36 +1,336 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "109d5e24-9f07-4e4c-8892-8dabc2d18442",
+	"id": "20e7da1b-9dcc-4430-90d3-a226fb57962c",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
-		"dev-notes_users": {
-			"name": "dev-notes_users",
+		"dev-notes_chat_messages": {
+			"name": "dev-notes_chat_messages",
 			"columns": {
 				"id": {
 					"name": "id",
-					"type": "integer",
+					"type": "text",
 					"primaryKey": true,
 					"notNull": true,
-					"autoincrement": true
+					"autoincrement": false
 				},
-				"name": {
-					"name": "name",
+				"chatId": {
+					"name": "chatId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"role": {
+					"name": "role",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"content": {
+					"name": "content",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_chat_messages_chatId_dev-notes_chats_id_fk": {
+					"name": "dev-notes_chat_messages_chatId_dev-notes_chats_id_fk",
+					"tableFrom": "dev-notes_chat_messages",
+					"tableTo": "dev-notes_chats",
+					"columnsFrom": ["chatId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_chats": {
+			"name": "dev-notes_chats",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"workspaceId": {
+					"name": "workspaceId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"title": {
+					"name": "title",
 					"type": "text(256)",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
-				"email": {
-					"name": "email",
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_chats_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_chats_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_chats",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"dev-notes_chats_workspaceId_dev-notes_workspaces_id_fk": {
+					"name": "dev-notes_chats_workspaceId_dev-notes_workspaces_id_fk",
+					"tableFrom": "dev-notes_chats",
+					"tableTo": "dev-notes_workspaces",
+					"columnsFrom": ["workspaceId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_diagrams": {
+			"name": "dev-notes_diagrams",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"workspaceId": {
+					"name": "workspaceId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"title": {
+					"name": "title",
 					"type": "text(256)",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
-				"password": {
-					"name": "password",
+				"type": {
+					"name": "type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"content": {
+					"name": "content",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				},
+				"updatedAt": {
+					"name": "updatedAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_diagrams_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_diagrams_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_diagrams",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"dev-notes_diagrams_workspaceId_dev-notes_workspaces_id_fk": {
+					"name": "dev-notes_diagrams_workspaceId_dev-notes_workspaces_id_fk",
+					"tableFrom": "dev-notes_diagrams",
+					"tableTo": "dev-notes_workspaces",
+					"columnsFrom": ["workspaceId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_events": {
+			"name": "dev-notes_events",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"workspaceId": {
+					"name": "workspaceId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"title": {
+					"name": "title",
 					"type": "text(256)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"startTime": {
+					"name": "startTime",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"endTime": {
+					"name": "endTime",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_events_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_events_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_events",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"dev-notes_events_workspaceId_dev-notes_workspaces_id_fk": {
+					"name": "dev-notes_events_workspaceId_dev-notes_workspaces_id_fk",
+					"tableFrom": "dev-notes_events",
+					"tableTo": "dev-notes_workspaces",
+					"columnsFrom": ["workspaceId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_notes": {
+			"name": "dev-notes_notes",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"workspaceId": {
+					"name": "workspaceId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"title": {
+					"name": "title",
+					"type": "text(256)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"content": {
+					"name": "content",
+					"type": "text",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
@@ -51,14 +351,235 @@
 					"autoincrement": false
 				}
 			},
-			"indexes": {
-				"dev-notes_users_email_unique": {
-					"name": "dev-notes_users_email_unique",
-					"columns": ["email"],
-					"isUnique": true
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_notes_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_notes_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_notes",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"dev-notes_notes_workspaceId_dev-notes_workspaces_id_fk": {
+					"name": "dev-notes_notes_workspaceId_dev-notes_workspaces_id_fk",
+					"tableFrom": "dev-notes_notes",
+					"tableTo": "dev-notes_workspaces",
+					"columnsFrom": ["workspaceId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
 				}
 			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_sessions": {
+			"name": "dev-notes_sessions",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"expiresAt": {
+					"name": "expiresAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_sessions_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_sessions_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_sessions",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_users": {
+			"name": "dev-notes_users",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"first_name": {
+					"name": "first_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"last_name": {
+					"name": "last_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"email": {
+					"name": "email",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				},
+				"updatedAt": {
+					"name": "updatedAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
 			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_workspace_members": {
+			"name": "dev-notes_workspace_members",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"workspaceId": {
+					"name": "workspaceId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"userId": {
+					"name": "userId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"role": {
+					"name": "role",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"addedAt": {
+					"name": "addedAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_workspace_members_workspaceId_dev-notes_workspaces_id_fk": {
+					"name": "dev-notes_workspace_members_workspaceId_dev-notes_workspaces_id_fk",
+					"tableFrom": "dev-notes_workspace_members",
+					"tableTo": "dev-notes_workspaces",
+					"columnsFrom": ["workspaceId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"dev-notes_workspace_members_userId_dev-notes_users_id_fk": {
+					"name": "dev-notes_workspace_members_userId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_workspace_members",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {}
+		},
+		"dev-notes_workspaces": {
+			"name": "dev-notes_workspaces",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "text(256)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"ownerId": {
+					"name": "ownerId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "(unixepoch())"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"dev-notes_workspaces_ownerId_dev-notes_users_id_fk": {
+					"name": "dev-notes_workspaces_ownerId_dev-notes_users_id_fk",
+					"tableFrom": "dev-notes_workspaces",
+					"tableTo": "dev-notes_users",
+					"columnsFrom": ["ownerId"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
 			"compositePrimaryKeys": {},
 			"uniqueConstraints": {},
 			"checkConstraints": {}

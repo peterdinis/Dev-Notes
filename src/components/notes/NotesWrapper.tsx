@@ -1,8 +1,8 @@
 <<<<<<< HEAD
 "use client"
 
-import { useState, type FC } from "react";
-import { Plus, Search, Edit3, Save, FileText } from "lucide-react";
+import { Edit3, FileText, Plus, Save, Search } from "lucide-react";
+import { type FC, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -12,6 +12,8 @@ import { type FC, useState } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { Button } from "../ui/button";
 >>>>>>> main
+import { useToast } from "~/hooks/shared/use-toast";
+import DashboardLayout from "../dashboard/DashboardLayout";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import {
@@ -22,8 +24,6 @@ import {
 	SelectValue,
 } from "../ui/select";
 import TipTapEditor from "./editor/TipTapEditor";
-import { useToast } from "~/hooks/shared/use-toast";
-import DashboardLayout from "../dashboard/DashboardLayout";
 
 interface Note {
 	id: string;
@@ -131,16 +131,16 @@ const NotesWrapper: FC = () => {
       <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="flex h-full">
         {/* Sidebar */}
-        <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 backdrop-blur-sm animate-slide-in-left">
-          <div className="p-6 space-y-4">
-            <div className="flex items-center justify-between animate-fade-in-up">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Notes</h2>
+        <div className="w-1/3 animate-slide-in-left border-slate-200 border-r bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/30">
+          <div className="space-y-4 p-6">
+            <div className="flex animate-fade-in-up items-center justify-between">
+              <h2 className="font-bold text-2xl text-slate-900 dark:text-slate-100">Notes</h2>
               <Button
                 onClick={handleCreateNote}
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-200 hover:scale-105"
+                className="bg-emerald-600 text-white transition-all duration-200 hover:scale-105 hover:bg-emerald-700"
               >
-                <Plus className="w-4 h-4 mr-1" />
+                <Plus className="mr-1 h-4 w-4" />
                 New
               </Button>
             </div>
@@ -240,11 +240,11 @@ const NotesWrapper: FC = () => {
 <<<<<<< HEAD
               <div className="flex-1 p-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 {isEditing ? (
-                  <div className="space-y-4 h-full">
+                  <div className="h-full space-y-4">
                     <Input
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100 text-lg font-semibold focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-slate-300 bg-white font-semibold text-lg text-slate-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
                       placeholder="Note title..."
                     />
                     <TipTapEditor
@@ -256,7 +256,7 @@ const NotesWrapper: FC = () => {
                 ) : (
                   <div className="prose prose-slate dark:prose-invert max-w-none">
                     <div 
-                      className="text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900/50 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm"
+                      className="rounded-lg border border-slate-200 bg-white p-6 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300"
                       dangerouslySetInnerHTML={{ __html: selectedNote.content }}
                     />
                   </div>
@@ -264,10 +264,10 @@ const NotesWrapper: FC = () => {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center animate-fade-in-up">
+            <div className="flex flex-1 animate-fade-in-up items-center justify-center">
               <div className="text-center">
-                <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4 animate-pulse-slow" />
-                <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300 mb-2">No note selected</h3>
+                <FileText className="mx-auto mb-4 h-12 w-12 animate-pulse-slow text-slate-400" />
+                <h3 className="mb-2 font-medium text-lg text-slate-700 dark:text-slate-300">No note selected</h3>
                 <p className="text-slate-500 dark:text-slate-400">Select a note from the sidebar or create a new one</p>
               </div>
             </div>

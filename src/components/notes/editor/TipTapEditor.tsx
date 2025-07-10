@@ -119,8 +119,8 @@ const TipTapEditor = ({
 
 <<<<<<< HEAD
   return (
-    <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900">
-      <div className="border-b border-slate-300 dark:border-slate-700 p-2 flex flex-wrap gap-1 bg-slate-50 dark:bg-slate-800">
+    <div className="overflow-hidden rounded-lg border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-900">
+      <div className="flex flex-wrap gap-1 border-slate-300 border-b bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-800">
         {/* Text Formatting */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -157,7 +157,7 @@ const TipTapEditor = ({
           <Code className="h-4 w-4" />
         </ToolbarButton>
         
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
         
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -187,7 +187,7 @@ const TipTapEditor = ({
           <Type className="h-4 w-4" />
         </ToolbarButton>
         
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -210,7 +210,7 @@ const TipTapEditor = ({
           <AlignRight className="h-4 w-4" />
         </ToolbarButton>
         
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
         
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -240,7 +240,7 @@ const TipTapEditor = ({
           <Code className="h-4 w-4" />
         </ToolbarButton>
         
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
@@ -259,7 +259,7 @@ const TipTapEditor = ({
       
       <EditorContent 
         editor={editor} 
-        className="prose prose-slate dark:prose-invert max-w-none p-4 min-h-[300px] focus:outline-none"
+        className="prose prose-slate dark:prose-invert min-h-[300px] max-w-none p-4 focus:outline-none"
       />
     </div>
   );
