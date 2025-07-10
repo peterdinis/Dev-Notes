@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import { Ubuntu_Mono } from "next/font/google";
 import Navigation from "~/components/shared/Navigation";
 import { ScrollToTop } from "~/components/shared/ScrollToTop";
+import { AuthProvider } from "~/components/shared/providers/AuthProvider";
 import { ThemeProvider } from "~/components/shared/providers/ThemeProvider";
 import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
-import { AuthProvider } from "~/components/shared/providers/AuthProvider";
 
 export const metadata: Metadata = {
 	title: "Dev Notes",
