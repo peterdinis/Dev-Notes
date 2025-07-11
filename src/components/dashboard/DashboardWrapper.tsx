@@ -20,7 +20,6 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
 import DashboardLayout from "./DashboardLayout";
 import { api } from "~/trpc/react";
 
@@ -29,7 +28,6 @@ const DashboardWrapper: FC = () => {
 
 	const [newWorkspace, setNewWorkspace] = useState({
 		name: "",
-		description: "",
 	});
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -41,8 +39,9 @@ const DashboardWrapper: FC = () => {
 				toast({
 					title: "Workspace Created",
 					description: `"${data!.name}" has been created successfully`,
+					className: "bg-green-800 text-white font-bold text-xl leading-[125%]"
 				});
-				setNewWorkspace({ name: "", description: "" });
+				setNewWorkspace({ name: ""});
 				setIsDialogOpen(false);
 				await utils.workspace.getAll.invalidate();
 			},
@@ -120,24 +119,6 @@ const DashboardWrapper: FC = () => {
 											}
 											placeholder="Enter workspace name"
 											className="border-slate-600 mt-2 bg-slate-800 text-slate-100"
-										/>
-									</div>
-									<div>
-										<Label htmlFor="description" className="text-slate-200">
-											Description
-										</Label>
-										<Textarea
-											id="description"
-											value={newWorkspace.description}
-											onChange={(e) =>
-												setNewWorkspace({
-													...newWorkspace,
-													description: e.target.value,
-												})
-											}
-											placeholder="Enter workspace description"
-											className="border-slate-600 bg-slate-800 mt-2 text-slate-100"
-											rows={3}
 										/>
 									</div>
 									<div className="flex justify-end space-x-2">
