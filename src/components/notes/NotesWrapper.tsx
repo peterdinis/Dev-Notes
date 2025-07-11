@@ -15,6 +15,8 @@ import { useToast } from "~/hooks/shared/use-toast";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import TipTapEditor from "./editor/TipTapEditor";
+import { api } from "~/trpc/react";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 
 interface Note {
   id: string;
@@ -28,6 +30,11 @@ interface Note {
 
 const NotesWrapper: FC = () => {
   const { toast } = useToast();
+  const {user} = useKindeAuth();
+
+  const notesList = api.note.list.useQuery({
+	workspaceId: user.id
+  });
   const [notes, setNotes] = useState<Note[]>([
     {
       id: "1",
