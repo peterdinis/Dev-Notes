@@ -23,6 +23,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import DashboardLayout from "./DashboardLayout";
+import { api } from "~/trpc/react";
 
 interface Workspace {
 	id: string;
@@ -35,30 +36,40 @@ interface Workspace {
 
 const DashboardWrapper: FC = () => {
 	const { toast } = useToast();
-	const [workspaces, setWorkspaces] = useState<Workspace[]>([
-		{
-			id: "1",
-			name: "React Project",
-			description: "Notes and documentation for the React application",
-			notesCount: 15,
-			createdAt: "2024-01-15",
-			lastModified: "2024-01-20",
-		},
-		{
-			id: "2",
-			name: "API Documentation",
-			description: "REST API endpoints and usage examples",
-			notesCount: 8,
-			createdAt: "2024-01-10",
-			lastModified: "2024-01-18",
-		},
-	]);
 
 	const [newWorkspace, setNewWorkspace] = useState({
 		name: "",
 		description: "",
 	});
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+	const utils = api.useUtils();
+
+	const { data: workspaces = []} = api.workspace.getAll.useQuery({
+		page: 1,
+		pageSize: 1000,
+		search: ""
+	});
+
+	const { mutate: createWorkspace, isPending: isCreating } =
+		api.workspace.create.useMutation({
+			onSuccess: async (data) => {
+				toast({
+					title: "Workspace Created",
+					description: `"${data!.name}" has been created successfully`,
+				});
+				setNewWorkspace({ name: "", description: "" });
+				setIsDialogOpen(false);
+				await utils.workspace.getAll.invalidate();
+			},
+			onError: (error) => {
+				toast({
+					title: "Error",
+					description: error.message,
+					variant: "destructive",
+				});
+			},
+		});
 
 	const handleCreateWorkspace = () => {
 		if (!newWorkspace.name.trim()) {
@@ -70,22 +81,8 @@ const DashboardWrapper: FC = () => {
 			return;
 		}
 
-		const workspace: Workspace = {
-			id: Date.now().toString(),
+		createWorkspace({
 			name: newWorkspace.name,
-			description: newWorkspace.description,
-			notesCount: 0,
-			createdAt: new Date().toISOString().split("T")[0]!,
-			lastModified: new Date().toISOString().split("T")[0]!,
-		};
-
-		setWorkspaces([...workspaces, workspace]);
-		setNewWorkspace({ name: "", description: "" });
-		setIsDialogOpen(false);
-
-		toast({
-			title: "Workspace Created",
-			description: `"${workspace.name}" has been created successfully`,
 		});
 	};
 
@@ -105,7 +102,10 @@ const DashboardWrapper: FC = () => {
 
 						<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 							<DialogTrigger asChild>
-								<Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+								<Button
+									disabled={isCreating}
+									className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+								>
 									<Plus className="mr-2 h-4 w-4" />
 									New Workspace
 								</Button>
@@ -165,6 +165,7 @@ const DashboardWrapper: FC = () => {
 											Cancel
 										</Button>
 										<Button
+											disabled={isCreating}
 											onClick={handleCreateWorkspace}
 											className="bg-purple-600 hover:bg-purple-700"
 										>
@@ -186,7 +187,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.length}
+									TODO WORKSPACE LENGTH
 								</div>
 							</CardContent>
 						</Card>
@@ -200,7 +201,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.reduce((total, ws) => total + ws.notesCount, 0)}
+									TODO Total Notes
 								</div>
 							</CardContent>
 						</Card>
@@ -214,18 +215,18 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.length}
+									TODO WORKSPACE LENGTH
 								</div>
 							</CardContent>
 						</Card>
 					</div>
 
-					<div>
+					<div>{workspaces.length}
 						<h2 className="mb-6 font-semibold text-2xl text-slate-200">
 							Your Workspaces
 						</h2>
 						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-							{workspaces.map((workspace) => (
+							{workspaces && workspaces.items.map((workspace) => (
 								<Card
 									key={workspace.id}
 									className="group cursor-pointer border-slate-700 bg-slate-900/50 transition-all duration-200 hover:border-slate-600"
