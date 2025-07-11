@@ -135,7 +135,7 @@ const DashboardWrapper: FC = () => {
 												})
 											}
 											placeholder="Enter workspace name"
-											className="border-slate-600 bg-slate-800 text-slate-100"
+											className="border-slate-600 mt-2 bg-slate-800 text-slate-100"
 										/>
 									</div>
 									<div>
@@ -152,7 +152,7 @@ const DashboardWrapper: FC = () => {
 												})
 											}
 											placeholder="Enter workspace description"
-											className="border-slate-600 bg-slate-800 text-slate-100"
+											className="border-slate-600 bg-slate-800 mt-2 text-slate-100"
 											rows={3}
 										/>
 									</div>
