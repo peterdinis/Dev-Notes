@@ -1,13 +1,12 @@
 "use client";
 
-import { Calendar, Clock, FileText, Folder, Plus } from "lucide-react";
+import { Calendar, FileText, Folder, Plus } from "lucide-react";
 import { type FC, useState } from "react";
 import { useToast } from "~/hooks/shared/use-toast";
 import { Button } from "../ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
@@ -25,15 +24,6 @@ import { Textarea } from "../ui/textarea";
 import DashboardLayout from "./DashboardLayout";
 import { api } from "~/trpc/react";
 
-interface Workspace {
-	id: string;
-	name: string;
-	description: string;
-	notesCount: number;
-	createdAt: string;
-	lastModified: string;
-}
-
 const DashboardWrapper: FC = () => {
 	const { toast } = useToast();
 
@@ -44,12 +34,6 @@ const DashboardWrapper: FC = () => {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	const utils = api.useUtils();
-
-	const { data: workspaces = []} = api.workspace.getAll.useQuery({
-		page: 1,
-		pageSize: 1000,
-		search: ""
-	});
 
 	const { mutate: createWorkspace, isPending: isCreating } =
 		api.workspace.create.useMutation({
@@ -219,44 +203,6 @@ const DashboardWrapper: FC = () => {
 								</div>
 							</CardContent>
 						</Card>
-					</div>
-
-					<div>{workspaces.length}
-						<h2 className="mb-6 font-semibold text-2xl text-slate-200">
-							Your Workspaces
-						</h2>
-						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-							{workspaces && workspaces.items.map((workspace) => (
-								<Card
-									key={workspace.id}
-									className="group cursor-pointer border-slate-700 bg-slate-900/50 transition-all duration-200 hover:border-slate-600"
-								>
-									<CardHeader>
-										<div className="flex items-center justify-between">
-											<CardTitle className="text-slate-100 transition-colors group-hover:text-purple-300">
-												{workspace.name}
-											</CardTitle>
-											<Folder className="h-5 w-5 text-purple-500" />
-										</div>
-										<CardDescription className="text-slate-400">
-											{workspace.description}
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-2">
-											<div className="flex items-center text-slate-400 text-sm">
-												<FileText className="mr-2 h-4 w-4" />
-												{workspace.notesCount} notes
-											</div>
-											<div className="flex items-center text-slate-400 text-sm">
-												<Clock className="mr-2 h-4 w-4" />
-												Updated {workspace.lastModified}
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
-						</div>
 					</div>
 				</div>
 			</div>
