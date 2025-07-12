@@ -1,5 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { and, eq, ilike, sql } from "drizzle-orm";
+import z from "zod";
 import { workspaces } from "~/server/db/schema";
 import {
 	createWorkspaceSchema,
@@ -38,6 +39,28 @@ export const workspaceRouter = createTRPCRouter({
 				})
 				.returning();
 			return result[0];
+		}),
+
+	getAllWithoutPagination: publicProcedure
+		.input(z.object({ search: z.string().optional() }))
+		.query(async ({ ctx, input }) => {
+			const user = await getValidatedUser(ctx);
+
+			const where = and(
+				eq(workspaces.ownerId, user.id),
+				input.search ? ilike(workspaces.name, `%${input.search}%`) : undefined,
+			);
+
+			const items = await ctx.db
+				.select()
+				.from(workspaces)
+				.where(where)
+				.orderBy(workspaces.createdAt);
+
+			return {
+				items,
+				total: items.length,
+			};
 		}),
 
 	getAll: publicProcedure
