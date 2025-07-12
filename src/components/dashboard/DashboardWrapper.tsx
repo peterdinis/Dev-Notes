@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar, FileText, Folder, Plus } from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 import { useToast } from "~/hooks/shared/use-toast";
 import { api } from "~/trpc/react";
 import { Button } from "../ui/button";
@@ -27,6 +27,21 @@ const DashboardWrapper: FC = () => {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	const utils = api.useUtils();
+
+	const {data: workspaceData} = api.workspace.getAllWithoutPagination.useQuery({
+		search: ""
+	});
+	const {data: notesData} = api.note.listAll.useQuery({
+
+	}) 
+
+	const getWorkspacesLength = useMemo(() => {
+		return workspaceData?.items.length
+	}, [workspaceData])
+
+	const getNotesLength = useMemo(() => {
+		return notesData?.items.length
+	}, [notesData])
 
 	const { mutate: createWorkspace, isPending: isCreating } =
 		api.workspace.create.useMutation({
@@ -153,7 +168,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									TODO WORKSPACE LENGTH
+									{getWorkspacesLength}
 								</div>
 							</CardContent>
 						</Card>
@@ -167,7 +182,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									TODO Total Notes
+									{getNotesLength}
 								</div>
 							</CardContent>
 						</Card>
@@ -181,7 +196,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									TODO WORKSPACE LENGTH
+									TODO Active Project length
 								</div>
 							</CardContent>
 						</Card>
