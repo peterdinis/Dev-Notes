@@ -1,13 +1,12 @@
 "use client";
 
-import { Calendar, Clock, FileText, Folder, Plus } from "lucide-react";
+import { Calendar, FileText, Folder, Plus } from "lucide-react";
 import { type FC, useState } from "react";
 import { useToast } from "~/hooks/shared/use-toast";
 import { Button } from "../ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
@@ -21,44 +20,39 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
 import DashboardLayout from "./DashboardLayout";
-
-interface Workspace {
-	id: string;
-	name: string;
-	description: string;
-	notesCount: number;
-	createdAt: string;
-	lastModified: string;
-}
+import { api } from "~/trpc/react";
 
 const DashboardWrapper: FC = () => {
 	const { toast } = useToast();
-	const [workspaces, setWorkspaces] = useState<Workspace[]>([
-		{
-			id: "1",
-			name: "React Project",
-			description: "Notes and documentation for the React application",
-			notesCount: 15,
-			createdAt: "2024-01-15",
-			lastModified: "2024-01-20",
-		},
-		{
-			id: "2",
-			name: "API Documentation",
-			description: "REST API endpoints and usage examples",
-			notesCount: 8,
-			createdAt: "2024-01-10",
-			lastModified: "2024-01-18",
-		},
-	]);
 
 	const [newWorkspace, setNewWorkspace] = useState({
 		name: "",
-		description: "",
 	});
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+	const utils = api.useUtils();
+
+	const { mutate: createWorkspace, isPending: isCreating } =
+		api.workspace.create.useMutation({
+			onSuccess: async (data) => {
+				toast({
+					title: "Workspace Created",
+					description: `"${data!.name}" has been created successfully`,
+					className: "bg-green-800 text-white font-bold text-xl leading-[125%]"
+				});
+				setNewWorkspace({ name: ""});
+				setIsDialogOpen(false);
+				await utils.workspace.getAll.invalidate();
+			},
+			onError: (error) => {
+				toast({
+					title: "Error",
+					description: error.message,
+					variant: "destructive",
+				});
+			},
+		});
 
 	const handleCreateWorkspace = () => {
 		if (!newWorkspace.name.trim()) {
@@ -70,22 +64,8 @@ const DashboardWrapper: FC = () => {
 			return;
 		}
 
-		const workspace: Workspace = {
-			id: Date.now().toString(),
+		createWorkspace({
 			name: newWorkspace.name,
-			description: newWorkspace.description,
-			notesCount: 0,
-			createdAt: new Date().toISOString().split("T")[0]!,
-			lastModified: new Date().toISOString().split("T")[0]!,
-		};
-
-		setWorkspaces([...workspaces, workspace]);
-		setNewWorkspace({ name: "", description: "" });
-		setIsDialogOpen(false);
-
-		toast({
-			title: "Workspace Created",
-			description: `"${workspace.name}" has been created successfully`,
 		});
 	};
 
@@ -105,7 +85,10 @@ const DashboardWrapper: FC = () => {
 
 						<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 							<DialogTrigger asChild>
-								<Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+								<Button
+									disabled={isCreating}
+									className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+								>
 									<Plus className="mr-2 h-4 w-4" />
 									New Workspace
 								</Button>
@@ -135,25 +118,7 @@ const DashboardWrapper: FC = () => {
 												})
 											}
 											placeholder="Enter workspace name"
-											className="border-slate-600 bg-slate-800 text-slate-100"
-										/>
-									</div>
-									<div>
-										<Label htmlFor="description" className="text-slate-200">
-											Description
-										</Label>
-										<Textarea
-											id="description"
-											value={newWorkspace.description}
-											onChange={(e) =>
-												setNewWorkspace({
-													...newWorkspace,
-													description: e.target.value,
-												})
-											}
-											placeholder="Enter workspace description"
-											className="border-slate-600 bg-slate-800 text-slate-100"
-											rows={3}
+											className="border-slate-600 mt-2 bg-slate-800 text-slate-100"
 										/>
 									</div>
 									<div className="flex justify-end space-x-2">
@@ -165,6 +130,7 @@ const DashboardWrapper: FC = () => {
 											Cancel
 										</Button>
 										<Button
+											disabled={isCreating}
 											onClick={handleCreateWorkspace}
 											className="bg-purple-600 hover:bg-purple-700"
 										>
@@ -186,7 +152,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.length}
+									TODO WORKSPACE LENGTH
 								</div>
 							</CardContent>
 						</Card>
@@ -200,7 +166,7 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.reduce((total, ws) => total + ws.notesCount, 0)}
+									TODO Total Notes
 								</div>
 							</CardContent>
 						</Card>
@@ -214,48 +180,10 @@ const DashboardWrapper: FC = () => {
 							</CardHeader>
 							<CardContent>
 								<div className="font-bold text-2xl text-slate-100">
-									{workspaces.length}
+									TODO WORKSPACE LENGTH
 								</div>
 							</CardContent>
 						</Card>
-					</div>
-
-					<div>
-						<h2 className="mb-6 font-semibold text-2xl text-slate-200">
-							Your Workspaces
-						</h2>
-						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-							{workspaces.map((workspace) => (
-								<Card
-									key={workspace.id}
-									className="group cursor-pointer border-slate-700 bg-slate-900/50 transition-all duration-200 hover:border-slate-600"
-								>
-									<CardHeader>
-										<div className="flex items-center justify-between">
-											<CardTitle className="text-slate-100 transition-colors group-hover:text-purple-300">
-												{workspace.name}
-											</CardTitle>
-											<Folder className="h-5 w-5 text-purple-500" />
-										</div>
-										<CardDescription className="text-slate-400">
-											{workspace.description}
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-2">
-											<div className="flex items-center text-slate-400 text-sm">
-												<FileText className="mr-2 h-4 w-4" />
-												{workspace.notesCount} notes
-											</div>
-											<div className="flex items-center text-slate-400 text-sm">
-												<Clock className="mr-2 h-4 w-4" />
-												Updated {workspace.lastModified}
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
-						</div>
 					</div>
 				</div>
 			</div>
