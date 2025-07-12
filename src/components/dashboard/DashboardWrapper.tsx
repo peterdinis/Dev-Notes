@@ -62,6 +62,12 @@ const DashboardWrapper: FC = () => {
 		createWorkspace({
 			name: newWorkspace.name,
 		});
+
+		toast({
+			title: "New workspace was created",
+			duration: 2000,
+			className: "bg-green-800 text-xl font-bold leading-[125%]"
+		})
 	};
 
 	return (
