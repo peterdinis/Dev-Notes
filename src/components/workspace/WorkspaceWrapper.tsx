@@ -22,6 +22,7 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const getRoleIcon = (role: string) => {
 	switch (role) {
@@ -142,18 +143,56 @@ const WorkspaceWrapper: FC = () => {
 						{isLoading ? (
 							<p>Loading workspaces...</p>
 						) : data?.items.length ? (
-							<ul className="space-y-2">
+							<ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
 								{data.items.map((workspace) => (
 									<li
 										key={workspace.id}
-										className="rounded-lg border p-4 dark:border-slate-700"
+										className="group flex items-center gap-4 rounded-xl border p-4 transition hover:bg-muted dark:border-slate-700 dark:hover:bg-slate-800"
 									>
-										<p className="font-semibold text-slate-900 dark:text-slate-100">
-											{workspace.name}
-										</p>
-										<p className="text-slate-600 text-sm dark:text-slate-400">
-											ID: {workspace.id}
-										</p>
+										<div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold uppercase">
+											{workspace.name.slice(0, 2)}
+										</div>
+										<div className="flex-1">
+											<p className="font-medium text-slate-900 dark:text-slate-100">
+												{workspace.name}
+											</p>
+											<p className="text-sm text-muted-foreground">Team workspace</p>
+										</div>
+
+										{/* Tooltip + DropdownMenu */}
+										<DropdownMenu>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<DropdownMenuTrigger asChild>
+														<Button
+															size="sm"
+															variant="ghost"
+															className="opacity-0 group-hover:opacity-100"
+														>
+															<MoreVertical className="h-4 w-4" />
+														</Button>
+													</DropdownMenuTrigger>
+												</TooltipTrigger>
+												<TooltipContent side="left" sideOffset={8}>
+													View options
+												</TooltipContent>
+											</Tooltip>
+
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem onClick={() => console.log("Open", workspace.id)}>
+													Open
+												</DropdownMenuItem>
+												<DropdownMenuItem onClick={() => console.log("Rename", workspace.id)}>
+													Rename
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													className="text-red-500"
+													onClick={() => console.log("Delete", workspace.id)}
+												>
+													Delete
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</li>
 								))}
 							</ul>
@@ -161,6 +200,7 @@ const WorkspaceWrapper: FC = () => {
 							<p>No workspaces found.</p>
 						)}
 					</CardContent>
+
 				</Card>
 
 				<div className="mt-5">

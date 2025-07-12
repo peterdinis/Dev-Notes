@@ -1,4 +1,4 @@
-import { workspaces, users } from "~/server/db/schema";
+import { workspaces} from "~/server/db/schema";
 import {
   createWorkspaceSchema,
   getAllWorkspacesSchema,
