@@ -7,8 +7,8 @@ import {
   deleteWorkspaceSchema,
 } from "../schemas/workspaceSchema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { eq, ilike, and, sql} from "drizzle-orm";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { and, eq, ilike, sql } from "drizzle-orm";
 
 async function getValidatedUser(ctx: any) {
   const { getUser } = getKindeServerSession();

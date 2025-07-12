@@ -1,14 +1,8 @@
 "use client";
 
-import {
-	Crown,
-	MoreVertical,
-	Plus,
-	Search,
-	Shield,
-	User,
-} from "lucide-react";
+import { Crown, MoreVertical, Plus, Search, Shield, User } from "lucide-react";
 import type { FC } from "react";
+import { api } from "~/trpc/react";
 import TeamChat from "../chat/TeamChat";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -28,7 +22,6 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
-import { api } from "~/trpc/react";
 
 const getRoleIcon = (role: string) => {
 	switch (role) {
@@ -86,7 +79,7 @@ const WorkspaceWrapper: FC = () => {
 					</CardHeader>
 					<CardContent>
 						<div className="relative mb-4">
-							<Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+							<Search className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground" />
 							<Input placeholder="Search members..." className="pl-9" />
 						</div>
 						<div className="space-y-4">
@@ -104,13 +97,15 @@ const WorkspaceWrapper: FC = () => {
 												/>
 												<AvatarFallback>JP</AvatarFallback>
 											</Avatar>
-											<span className={`absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-background ${getStatusColor("online")}`} />
+											<span
+												className={`absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full ring-2 ring-background ${getStatusColor("online")}`}
+											/>
 										</div>
 										<div>
-											<p className="text-sm font-medium leading-none">
+											<p className="font-medium text-sm leading-none">
 												John Doe
 											</p>
-											<p className="text-sm text-muted-foreground">
+											<p className="text-muted-foreground text-sm">
 												john@example.com
 											</p>
 										</div>
@@ -122,10 +117,7 @@ const WorkspaceWrapper: FC = () => {
 										</Badge>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
-												<Button
-													variant="ghost"
-													className="h-8 w-8 p-0"
-												>
+												<Button variant="ghost" className="h-8 w-8 p-0">
 													<MoreVertical className="h-4 w-4" />
 												</Button>
 											</DropdownMenuTrigger>
@@ -156,10 +148,10 @@ const WorkspaceWrapper: FC = () => {
 										key={workspace.id}
 										className="rounded-lg border p-4 dark:border-slate-700"
 									>
-										<p className="text-slate-900 dark:text-slate-100 font-semibold">
+										<p className="font-semibold text-slate-900 dark:text-slate-100">
 											{workspace.name}
 										</p>
-										<p className="text-sm text-slate-600 dark:text-slate-400">
+										<p className="text-slate-600 text-sm dark:text-slate-400">
 											ID: {workspace.id}
 										</p>
 									</li>

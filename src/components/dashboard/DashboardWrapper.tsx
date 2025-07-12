@@ -3,13 +3,9 @@
 import { Calendar, FileText, Folder, Plus } from "lucide-react";
 import { type FC, useState } from "react";
 import { useToast } from "~/hooks/shared/use-toast";
+import { api } from "~/trpc/react";
 import { Button } from "../ui/button";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
 	Dialog,
 	DialogContent,
@@ -21,7 +17,6 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import DashboardLayout from "./DashboardLayout";
-import { api } from "~/trpc/react";
 
 const DashboardWrapper: FC = () => {
 	const { toast } = useToast();
@@ -39,9 +34,9 @@ const DashboardWrapper: FC = () => {
 				toast({
 					title: "Workspace Created",
 					description: `"${data!.name}" has been created successfully`,
-					className: "bg-green-800 text-white font-bold text-xl leading-[125%]"
+					className: "bg-green-800 text-white font-bold text-xl leading-[125%]",
 				});
-				setNewWorkspace({ name: ""});
+				setNewWorkspace({ name: "" });
 				setIsDialogOpen(false);
 				await utils.workspace.getAll.invalidate();
 			},
@@ -67,6 +62,12 @@ const DashboardWrapper: FC = () => {
 		createWorkspace({
 			name: newWorkspace.name,
 		});
+
+		toast({
+			title: "New workspace was created",
+			duration: 2000,
+			className: "bg-green-800 text-xl font-bold leading-[125%]"
+		})
 	};
 
 	return (
@@ -118,7 +119,7 @@ const DashboardWrapper: FC = () => {
 												})
 											}
 											placeholder="Enter workspace name"
-											className="border-slate-600 mt-2 bg-slate-800 text-slate-100"
+											className="mt-2 border-slate-600 bg-slate-800 text-slate-100"
 										/>
 									</div>
 									<div className="flex justify-end space-x-2">
