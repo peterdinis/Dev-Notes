@@ -13,6 +13,37 @@ import {
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const noteRouter = createTRPCRouter({
+	listAll: publicProcedure
+		.input(
+			z.object({
+				query: z.string().max(100).optional(),
+				workspaceId: workspaceIdSchema.optional(),
+			}),
+		)
+		.query(async ({ input }) => {
+			const { getUser } = getKindeServerSession();
+			const user = await getUser();
+			if (!user || !user.id) throw new Error("Unauthorized");
+
+			const whereClause = and(
+				eq(notes.userId, user.id),
+				input.workspaceId
+					? eq(notes.workspaceId, input.workspaceId)
+					: undefined,
+				input.query ? ilike(notes.title, `%${input.query}%`) : undefined,
+			);
+
+			const allNotes = await db
+				.select()
+				.from(notes)
+				.where(whereClause)
+				.orderBy(notes.createdAt);
+
+			return {
+				items: allNotes,
+				total: allNotes.length,
+			};
+		}),
 	list: publicProcedure
 		.input(
 			z

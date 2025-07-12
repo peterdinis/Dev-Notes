@@ -57,10 +57,10 @@ const WorkspaceWrapper: FC = () => {
 		<DashboardLayout>
 			<div className="container mx-auto animate-fade-in-up space-y-6 px-4 py-6 sm:px-6 lg:px-8">
 				<div className="mb-8">
-					<h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
+					<h1 className="mb-2 font-bold text-2xl text-slate-900 sm:text-3xl dark:text-slate-100">
 						Workspace
 					</h1>
-					<p className="text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+					<p className="text-slate-600 text-sm sm:text-base dark:text-slate-400">
 						Collaborate with your development team
 					</p>
 				</div>
@@ -69,7 +69,9 @@ const WorkspaceWrapper: FC = () => {
 					<CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 						<div>
 							<CardTitle className="text-lg sm:text-xl">Team members</CardTitle>
-							<CardDescription>Manage your workspace team here.</CardDescription>
+							<CardDescription>
+								Manage your workspace team here.
+							</CardDescription>
 						</div>
 						<Button className="w-full sm:w-auto">
 							<Plus className="mr-2 h-4 w-4" />
@@ -101,10 +103,10 @@ const WorkspaceWrapper: FC = () => {
 											/>
 										</div>
 										<div>
-											<p className="text-sm font-medium leading-none">
+											<p className="font-medium text-sm leading-none">
 												John Doe
 											</p>
-											<p className="text-sm text-muted-foreground">
+											<p className="text-muted-foreground text-sm">
 												john@example.com
 											</p>
 										</div>
@@ -147,14 +149,16 @@ const WorkspaceWrapper: FC = () => {
 										key={workspace.id}
 										className="group flex items-center gap-4 rounded-xl border p-4 transition hover:bg-muted dark:border-slate-700 dark:hover:bg-slate-800"
 									>
-										<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold uppercase">
+										<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary uppercase">
 											{workspace.name.slice(0, 2)}
 										</div>
 										<div className="flex-1">
-											<p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+											<p className="font-medium text-slate-900 text-sm dark:text-slate-100">
 												{workspace.name}
 											</p>
-											<p className="text-sm text-muted-foreground">Team workspace</p>
+											<p className="text-muted-foreground text-sm">
+												Team workspace
+											</p>
 										</div>
 										<DropdownMenu>
 											<Tooltip>
@@ -174,10 +178,14 @@ const WorkspaceWrapper: FC = () => {
 												</TooltipContent>
 											</Tooltip>
 											<DropdownMenuContent align="end">
-												<DropdownMenuItem onClick={() => console.log("Open", workspace.id)}>
+												<DropdownMenuItem
+													onClick={() => console.log("Open", workspace.id)}
+												>
 													Open
 												</DropdownMenuItem>
-												<DropdownMenuItem onClick={() => console.log("Rename", workspace.id)}>
+												<DropdownMenuItem
+													onClick={() => console.log("Rename", workspace.id)}
+												>
 													Rename
 												</DropdownMenuItem>
 												<DropdownMenuItem
