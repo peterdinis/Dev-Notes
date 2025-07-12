@@ -37,11 +37,13 @@ const ProfileDropdown: FC = () => {
 				</DropdownMenuItem>
 
 				<DropdownMenuItem className="mb-2 border-b p-2">
-					<Link className="text-muted-foreground" href="/dashboard">Dashboard</Link>
+					<Link className="text-muted-foreground" href="/dashboard">
+						Dashboard
+					</Link>
 				</DropdownMenuItem>
 
 				<DropdownMenuItem className="cursor-pointer rounded px-2 py-1">
-					<LogoutLink href="/login">Logout</LogoutLink>
+					<LogoutLink postLogoutRedirectURL="/login">Logout</LogoutLink>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
