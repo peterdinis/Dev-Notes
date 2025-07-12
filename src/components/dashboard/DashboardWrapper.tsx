@@ -28,20 +28,19 @@ const DashboardWrapper: FC = () => {
 
 	const utils = api.useUtils();
 
-	const {data: workspaceData} = api.workspace.getAllWithoutPagination.useQuery({
-		search: ""
-	});
-	const {data: notesData} = api.note.listAll.useQuery({
-
-	}) 
+	const { data: workspaceData } =
+		api.workspace.getAllWithoutPagination.useQuery({
+			search: "",
+		});
+	const { data: notesData } = api.note.listAll.useQuery({});
 
 	const getWorkspacesLength = useMemo(() => {
-		return workspaceData?.items.length
-	}, [workspaceData])
+		return workspaceData?.items.length;
+	}, [workspaceData]);
 
 	const getNotesLength = useMemo(() => {
-		return notesData?.items.length
-	}, [notesData])
+		return notesData?.items.length;
+	}, [notesData]);
 
 	const { mutate: createWorkspace, isPending: isCreating } =
 		api.workspace.create.useMutation({
