@@ -9,7 +9,7 @@ import { workspaceRouter } from "./routers/workspaceRouter";
  */
 export const appRouter = createTRPCRouter({
 	note: noteRouter,
-	workspace: workspaceRouter
+	workspace: workspaceRouter,
 });
 
 // export type definition of API
