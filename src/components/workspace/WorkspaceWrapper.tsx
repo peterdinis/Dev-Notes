@@ -22,6 +22,7 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const getRoleIcon = (role: string) => {
 	switch (role) {
@@ -54,12 +55,12 @@ const WorkspaceWrapper: FC = () => {
 
 	return (
 		<DashboardLayout>
-			<div className="container mx-auto animate-fade-in-up space-y-6 p-6">
+			<div className="container mx-auto animate-fade-in-up space-y-6 px-4 py-6 sm:px-6 lg:px-8">
 				<div className="mb-8">
-					<h1 className="mb-2 font-bold text-3xl text-slate-900 dark:text-slate-100">
+					<h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
 						Workspace
 					</h1>
-					<p className="text-slate-600 dark:text-slate-400">
+					<p className="text-sm text-slate-600 dark:text-slate-400 sm:text-base">
 						Collaborate with your development team
 					</p>
 				</div>
@@ -67,12 +68,10 @@ const WorkspaceWrapper: FC = () => {
 				<Card>
 					<CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 						<div>
-							<CardTitle>Team members</CardTitle>
-							<CardDescription>
-								Manage your workspace team here.
-							</CardDescription>
+							<CardTitle className="text-lg sm:text-xl">Team members</CardTitle>
+							<CardDescription>Manage your workspace team here.</CardDescription>
 						</div>
-						<Button>
+						<Button className="w-full sm:w-auto">
 							<Plus className="mr-2 h-4 w-4" />
 							Invite member
 						</Button>
@@ -86,7 +85,7 @@ const WorkspaceWrapper: FC = () => {
 							{[...Array(5)].map((_, i) => (
 								<div
 									key={i}
-									className="flex items-center justify-between gap-4"
+									className="flex flex-wrap items-center justify-between gap-4"
 								>
 									<div className="flex items-center gap-4">
 										<div className="relative">
@@ -102,10 +101,10 @@ const WorkspaceWrapper: FC = () => {
 											/>
 										</div>
 										<div>
-											<p className="font-medium text-sm leading-none">
+											<p className="text-sm font-medium leading-none">
 												John Doe
 											</p>
-											<p className="text-muted-foreground text-sm">
+											<p className="text-sm text-muted-foreground">
 												john@example.com
 											</p>
 										</div>
@@ -135,25 +134,60 @@ const WorkspaceWrapper: FC = () => {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>My Workspaces</CardTitle>
+						<CardTitle className="text-lg sm:text-xl">My Workspaces</CardTitle>
 						<CardDescription>List of workspaces from database</CardDescription>
 					</CardHeader>
 					<CardContent>
 						{isLoading ? (
 							<p>Loading workspaces...</p>
 						) : data?.items.length ? (
-							<ul className="space-y-2">
+							<ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 								{data.items.map((workspace) => (
 									<li
 										key={workspace.id}
-										className="rounded-lg border p-4 dark:border-slate-700"
+										className="group flex items-center gap-4 rounded-xl border p-4 transition hover:bg-muted dark:border-slate-700 dark:hover:bg-slate-800"
 									>
-										<p className="font-semibold text-slate-900 dark:text-slate-100">
-											{workspace.name}
-										</p>
-										<p className="text-slate-600 text-sm dark:text-slate-400">
-											ID: {workspace.id}
-										</p>
+										<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold uppercase">
+											{workspace.name.slice(0, 2)}
+										</div>
+										<div className="flex-1">
+											<p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+												{workspace.name}
+											</p>
+											<p className="text-sm text-muted-foreground">Team workspace</p>
+										</div>
+										<DropdownMenu>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<DropdownMenuTrigger asChild>
+														<Button
+															size="icon"
+															variant="ghost"
+															className="opacity-0 group-hover:opacity-100"
+														>
+															<MoreVertical className="h-4 w-4" />
+														</Button>
+													</DropdownMenuTrigger>
+												</TooltipTrigger>
+												<TooltipContent side="left" sideOffset={8}>
+													View options
+												</TooltipContent>
+											</Tooltip>
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem onClick={() => console.log("Open", workspace.id)}>
+													Open
+												</DropdownMenuItem>
+												<DropdownMenuItem onClick={() => console.log("Rename", workspace.id)}>
+													Rename
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													className="text-red-500"
+													onClick={() => console.log("Delete", workspace.id)}
+												>
+													Delete
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</li>
 								))}
 							</ul>
